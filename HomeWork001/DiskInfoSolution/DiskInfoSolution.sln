@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDiskInfo", "MyDiskInfo\MyDiskInfo.csproj", "{4659A551-956E-4383-A00F-D35851A55864}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDiskInfoLibrary", "MyDiskInfoLibrary\MyDiskInfoLibrary.csproj", "{B72383D7-4761-465E-AB9F-0D6D58C80ECC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDiskInfoChannelClient", "MyDiskInfoChannelClient\MyDiskInfoChannelClient.csproj", "{64F9B664-B72D-4022-81AC-C38EAF88F167}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDiskInfoProxyClient", "MyDiskInfoProxyClient\MyDiskInfoProxyClient.csproj", "{93E8BFE9-7D7B-4356-819A-98194ADB8F45}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B72383D7-4761-465E-AB9F-0D6D58C80ECC} = {B72383D7-4761-465E-AB9F-0D6D58C80ECC}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4659A551-956E-4383-A00F-D35851A55864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4659A551-956E-4383-A00F-D35851A55864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4659A551-956E-4383-A00F-D35851A55864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4659A551-956E-4383-A00F-D35851A55864}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B72383D7-4761-465E-AB9F-0D6D58C80ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B72383D7-4761-465E-AB9F-0D6D58C80ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B72383D7-4761-465E-AB9F-0D6D58C80ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B72383D7-4761-465E-AB9F-0D6D58C80ECC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64F9B664-B72D-4022-81AC-C38EAF88F167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64F9B664-B72D-4022-81AC-C38EAF88F167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64F9B664-B72D-4022-81AC-C38EAF88F167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64F9B664-B72D-4022-81AC-C38EAF88F167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93E8BFE9-7D7B-4356-819A-98194ADB8F45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93E8BFE9-7D7B-4356-819A-98194ADB8F45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93E8BFE9-7D7B-4356-819A-98194ADB8F45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93E8BFE9-7D7B-4356-819A-98194ADB8F45}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
