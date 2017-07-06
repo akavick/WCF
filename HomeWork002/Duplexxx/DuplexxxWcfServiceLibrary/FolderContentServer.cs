@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DuplexxxWcfServiceLibrary
 {
@@ -13,28 +14,53 @@ namespace DuplexxxWcfServiceLibrary
     {
         public void RequestContent(string path)
         {
+            //проверки блокировки клиента
+            Task.Delay(1000).Wait();
+
+            IFolderContentCallback callback = null;
+
             try
             {
-                var callback = OperationContext.Current.GetCallbackChannel<IFolderContentCallback>();
-                var requestedDirectoryInfo = new DirectoryInfo(path);
+                callback = OperationContext.Current.GetCallbackChannel<IFolderContentCallback>();
+                var notFound = string.Format("заданного пути не существует: {0}", path);
 
-                if (!requestedDirectoryInfo.Exists)
+                if (!string.IsNullOrEmpty(path))
                 {
-                    callback.SendContent(string.Format("заданного пути не существует: {0}", path));
+                    if (path.Last() != '/' || path.Last() != '\\')
+                        path += "/";
+                }
+                else
+                {
+                    callback.SendContent(notFound);
+                    return;
+                }
+
+                var request = new DirectoryInfo(path);
+
+                if (!request.Exists)
+                {
+                    callback.SendContent(notFound);
                     return;
                 }
 
                 var sb = new StringBuilder();
 
-                foreach (var directoryInfo in requestedDirectoryInfo.GetDirectories())
-                {
-                    
-                }
+                foreach (var di in request.GetDirectories())
+                    sb.AppendLine(di.Name);
 
+                foreach (var fi in request.GetFiles())
+                    sb.AppendLine(fi.Name);
+
+                callback.SendContent(sb.ToString());
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                try
+                {
+                    if (callback != null && ((IClientChannel)callback).State == CommunicationState.Opened)
+                        callback.SendContent(e.Message);
+                }
+                catch { }
             }
         }
     }
