@@ -1,8 +1,8 @@
 using System;
 
-namespace DuplexxxWcfServiceLibrary
+namespace FolderContentClient
 {
-    class FolderContentCallback : IFolderContentCallback
+    public class FolderContentClient : IFolderContentCallback
     {
         public void SendContent(string content)
         {
