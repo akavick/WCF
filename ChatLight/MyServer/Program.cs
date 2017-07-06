@@ -29,8 +29,8 @@ namespace MyServer
             Console.WriteLine("Server started...");
 
             Random random = new Random();
-            string[] namesMan = File.ReadAllLines(@"FirstNamesMan.txt");
-            string[] namesWoman = File.ReadAllLines(@"FirstNamesWoman.txt");
+            string[] namesMan = File.ReadAllLines(@"..\..\FirstNamesMan.txt");
+            string[] namesWoman = File.ReadAllLines(@"..\..\FirstNamesWoman.txt");
             var names = namesMan
                 .Concat(namesWoman)
                 .OrderBy(n => random.Next())

@@ -59,8 +59,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Debug\FirstNamesMan.txt" />
-    <Content Include="bin\Debug\FirstNamesWoman.txt" />
+    <Content Include="FirstNamesMan.txt" />
+    <Content Include="FirstNamesWoman.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
