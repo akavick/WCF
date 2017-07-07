@@ -14,7 +14,7 @@ namespace DuplexxxWcfServiceLibrary
     {
         public void RequestContent(string path)
         {
-            //проверки блокировки клиента
+            //проверка блокировки клиента
             Task.Delay(1000).Wait();
 
             IFolderContentCallback callback = null;

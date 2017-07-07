@@ -19,14 +19,15 @@ namespace FolderContentClient
                 Console.Title = "ChannelClient";
                 Task.Delay(1000).Wait();
                 var client = new FolderContentClient();
-                factory = new DuplexChannelFactory<IFolderContentServer>(client, "FolderContentServerEndPoint");
+                factory = new DuplexChannelFactory<IFolderContentServer>(client, "FolderContentClientEndPoint");
                 var channel = factory.CreateChannel();
 
-                Console.WriteLine("Вводите путь:");
+                Console.WriteLine("Здесь и далее: введите путь каталога и нажмите <ENTER>");
                 while (true)
                 {
                     var path = Console.ReadLine();
                     channel.RequestContent(path);
+                    Console.WriteLine("----------Я НЕ ЗАБЛОКИРОВАН!----------{0}\tРезультат:", Environment.NewLine);
                 }
             }
             catch (Exception e)
