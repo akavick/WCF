@@ -4,14 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6248393D-8ED9-4B45-92D7-72462BC9D26A}</ProjectGuid>
+    <ProjectGuid>{451674A7-7B8F-49A0-88F2-440E8C49DBD0}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>MyServer</RootNamespace>
-    <AssemblyName>MyServer</AssemblyName>
+    <RootNamespace>HumanClient</RootNamespace>
+    <AssemblyName>HumanClient</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -56,10 +54,6 @@
       <Project>{F9C0CF83-E44B-4621-B35F-76F24ECE6573}</Project>
       <Name>ChatLibrary</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="FirstNamesMan.txt" />
-    <Content Include="FirstNamesWoman.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

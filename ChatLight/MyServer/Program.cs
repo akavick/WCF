@@ -15,15 +15,12 @@ namespace MyServer
         static void Main()
         {
             Console.Title = "CHAT-SERVER";
-            
-            //var address = new Uri("soap.udp://localhost:8080/");
-            //var binding = new UdpBinding();
 
-            var address = new Uri("net.tcp://localhost:8002/MyService");
+            var address = new Uri("net.tcp://localhost:8002/MyChat");
             var binding = new NetTcpBinding();
 
-            var contract = typeof(IMyServer);
-            var host = new ServiceHost(typeof(MyServer));
+            var contract = typeof(IChatServer);
+            var host = new ServiceHost(typeof(ChatLibrary.MyChatServer));
             host.AddServiceEndpoint(contract, binding, address);
             host.Open();
             Console.WriteLine("Server started...");
@@ -34,7 +31,7 @@ namespace MyServer
             var names = namesMan
                 .Concat(namesWoman)
                 .OrderBy(n => random.Next())
-                .Take(10)
+                .Take(5)
                 .ToArray();
 
             foreach (var name in names)
@@ -42,6 +39,8 @@ namespace MyServer
                 Process.Start(@"..\..\..\MyClient\bin\Debug\MyClient.exe", name);
                 Task.Delay(100).Wait();
             }
+
+            Process.Start(@"..\..\..\HumanClient\bin\Debug\HumanClient.exe");
 
             Console.ReadKey(true);
             host.Close();

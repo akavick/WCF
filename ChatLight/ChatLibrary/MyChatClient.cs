@@ -1,9 +1,8 @@
 ﻿using System;
-using ChatLibrary;
 
-namespace MyClient
+namespace ChatLibrary
 {
-    public class MyClient : IMyClient
+    public class MyChatClient : IChatClient
     {
         public void Refresh(string message)
         {

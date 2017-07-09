@@ -42,8 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMyClient.cs" />
-    <Compile Include="IMyServer.cs" />
+    <Compile Include="HumanChatWindow.cs" />
+    <Compile Include="IChatClient.cs" />
+    <Compile Include="IChatServer.cs" />
+    <Compile Include="IHumanChatWindow.cs" />
+    <Compile Include="MyChatClient.cs" />
+    <Compile Include="MyChatServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

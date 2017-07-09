@@ -3,7 +3,7 @@
 namespace ChatLibrary
 {
     [ServiceContract]
-    public interface IMyClient
+    public interface IChatClient
     {
         [OperationContract(IsOneWay = true)]
         void Refresh(string message);

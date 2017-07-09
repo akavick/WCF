@@ -14,18 +14,13 @@ namespace MyClient
         {
             var name = args.Any() ? args[0] : "MyClient";
             Console.Title = name;
-            var client = new MyClient();
 
-            //var address = new Uri("soap.udp://localhost:8080/");
-            //var binding = new UdpBinding();
-
-            var address = new Uri("net.tcp://localhost:8002/MyService");
+            var client = new MyChatClient();
+            var address = new Uri("net.tcp://localhost:8002/MyChat");
             var binding = new NetTcpBinding();
-
             var endpoint = new EndpointAddress(address);
-            var factory = new DuplexChannelFactory<IMyServer>(client, binding, endpoint);
+            var factory = new DuplexChannelFactory<IChatServer>(client, binding, endpoint);
             var channel = factory.CreateChannel();
-
             channel.Init(name);
 
             Random random = new Random();
@@ -48,7 +43,8 @@ namespace MyClient
                     break;
                 }
             }
-            //Console.ReadKey(true);
+
+            Console.ReadKey(true);
         }
     }
 }
