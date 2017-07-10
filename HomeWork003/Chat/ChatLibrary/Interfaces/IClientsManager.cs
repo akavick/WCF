@@ -2,8 +2,9 @@ namespace ChatLibrary.Interfaces
 {
     public interface IClientsManager
     {
-        IChatClient Current { get; }
-        bool Add(IChatClient client);
-        bool Remove(IChatClient client);
+        IChat Current { get; }
+        bool Add(IChat client);
+        bool Remove(IChat client);
+        bool IsExist(IChat client);
     }
 }

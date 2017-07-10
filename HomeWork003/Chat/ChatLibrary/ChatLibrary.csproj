@@ -44,8 +44,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IChatClient.cs" />
-    <Compile Include="Interfaces\IChatServer.cs" />
+    <Compile Include="Interfaces\IChat.cs" />
     <Compile Include="Interfaces\IClientsManager.cs" />
     <Compile Include="Interfaces\IView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

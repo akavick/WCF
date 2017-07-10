@@ -1,14 +1,14 @@
-﻿using System.ServiceModel;
+using System.ServiceModel;
 
 namespace ChatLibrary.Interfaces
 {
-    [ServiceContract(CallbackContract = typeof(IChatClient))]
-    public interface IChatServer
+    [ServiceContract(CallbackContract = typeof(IChat))]
+    public interface IChat
     {
         [OperationContract(IsOneWay = true)]
         void SendToMainChat(string message);
 
         [OperationContract(IsOneWay = true)]
-        void SendToPerson(string message);
+        void SendToPersonalChat(string message);
     }
 }
