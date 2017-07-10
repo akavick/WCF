@@ -9,19 +9,18 @@ namespace ChatLibrary
 {
     public class ChatServer : IChatServer
     {
-        private IClientsManager _connectionManager;
+        public IClientsManager ClientsManager { private get; set; }
 
-        public IClientsManager ConnectionManager
+        public void SendToMainChat(string message)
         {
-            get => _connectionManager;
-            set => _connectionManager = value;
+            var channel = OperationContext.Current.Channel as IDuplexContextChannel;
+            var callback = OperationContext.Current.GetCallbackChannel<IChatClient>();
+            var clientChannel = callback as IClientChannel;
         }
 
-        public void Send(string message)
+        public void SendToPerson(string message)
         {
             
         }
-
-
     }
 }

@@ -10,6 +10,8 @@
     Title="ChatServer"
     Height="350"
     Width="525">
-    <wpfChatControlLibrary:TabFullChatControl
-        x:Name="Chat" />
+    <Grid>
+        <wpfChatControlLibrary:TabFullChatControl
+            x:Name="Chat" />
+    </Grid>
 </Window>

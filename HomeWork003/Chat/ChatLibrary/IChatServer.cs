@@ -5,9 +5,10 @@ namespace ChatLibrary
     [ServiceContract(CallbackContract = typeof(IChatClient))]
     public interface IChatServer
     {
-        IClientsManager ConnectionManager { get; set; }
+        [OperationContract(IsOneWay = true)]
+        void SendToMainChat(string message);
 
         [OperationContract(IsOneWay = true)]
-        void Send(string message);
+        void SendToPerson(string message);
     }
 }

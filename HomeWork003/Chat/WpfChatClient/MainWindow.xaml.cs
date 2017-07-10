@@ -23,6 +23,12 @@ namespace WpfChatClient
         public MainWindow()
         {
             InitializeComponent();
+            Chat.MainChat.SendButton.Click += SendButton_Click;
+        }
+
+        private void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
