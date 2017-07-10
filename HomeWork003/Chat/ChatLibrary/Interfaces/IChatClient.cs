@@ -1,6 +1,6 @@
 using System.ServiceModel;
 
-namespace ChatLibrary
+namespace ChatLibrary.Interfaces
 {
     [ServiceContract]
     public interface IChatClient

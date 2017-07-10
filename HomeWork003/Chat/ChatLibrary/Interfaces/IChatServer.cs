@@ -1,6 +1,6 @@
 ﻿using System.ServiceModel;
 
-namespace ChatLibrary
+namespace ChatLibrary.Interfaces
 {
     [ServiceContract(CallbackContract = typeof(IChatClient))]
     public interface IChatServer
