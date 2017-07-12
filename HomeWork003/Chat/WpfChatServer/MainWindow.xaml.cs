@@ -12,13 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ChatLibrary.Interfaces;
 
 namespace WpfChatServer
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IChatView
     {
         public MainWindow()
         {
@@ -30,5 +31,18 @@ namespace WpfChatServer
         {
             
         }
+
+        public void RefreshMainChat(string message)
+        {
+            
+        }
+
+        public void RefreshPersonalChat(string message)
+        {
+            
+        }
+
+        public event Action<string> IncomingMainChatMessage;
+        public event Action<string> IncomingPersonalChatMessage;
     }
 }

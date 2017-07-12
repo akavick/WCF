@@ -2,8 +2,8 @@ using System.ServiceModel;
 
 namespace ChatLibrary.Interfaces
 {
-    [ServiceContract(CallbackContract = typeof(IChat))]
-    public interface IChat
+    [ServiceContract(CallbackContract = typeof(IChatContract))]
+    public interface IChatContract
     {
         [OperationContract(IsOneWay = true)]
         void SendToMainChat(string message);

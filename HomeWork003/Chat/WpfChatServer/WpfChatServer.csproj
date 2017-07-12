@@ -33,6 +33,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -94,6 +98,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ChatLibrary\ChatLibrary.csproj">
+      <Project>{6BA83F32-D139-40F6-BB07-9C72798081BB}</Project>
+      <Name>ChatLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WpfChatControlLibrary\WpfChatControlLibrary.csproj">
       <Project>{5e9cbaa2-d493-41c6-9d5d-82011f229b17}</Project>
       <Name>WpfChatControlLibrary</Name>

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using ChatLibrary.Classes;
 
 namespace WpfChatServer
 {
@@ -13,27 +14,16 @@ namespace WpfChatServer
     /// </summary>
     public partial class App : Application
     {
-        public App()
+        private void Application_Startup(object sender, StartupEventArgs e)
         {
-            this.Startup += App_Startup;
-            this.Exit += App_Exit;
-            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
-            InitializeComponent();
+            var mainWindow = new MainWindow { Title = "Chat SERVER" };
+            var manager = new MyChatClientsManager();
+            var chat = new MyManagedChatServer{ ClientsManager = manager };
+            var presenter = new MyChatPresenter { View = mainWindow, Chat = chat };
+            mainWindow.Show();
         }
 
-        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            
-        }
 
-        private void App_Exit(object sender, ExitEventArgs e)
-        {
 
-        }
-
-        private void App_Startup(object sender, StartupEventArgs e)
-        {
-            this.MainWindow = new MainWindow();
-        }
     }
 }

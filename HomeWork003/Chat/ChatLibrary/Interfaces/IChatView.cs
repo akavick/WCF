@@ -2,7 +2,7 @@
 
 namespace ChatLibrary.Interfaces
 {
-    public interface IView
+    public interface IChatView
     {
         void RefreshMainChat(string message);
         void RefreshPersonalChat(string message);
