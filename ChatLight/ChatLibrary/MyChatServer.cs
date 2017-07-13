@@ -7,7 +7,7 @@ using System.Timers;
 
 namespace ChatLibrary
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
     public class MyChatServer : IChatServer
     {
         private static readonly Dictionary<IChatClient, string> Clients = new Dictionary<IChatClient, string>();

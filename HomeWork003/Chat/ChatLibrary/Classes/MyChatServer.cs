@@ -3,16 +3,9 @@ using ChatLibrary.Interfaces;
 
 namespace ChatLibrary.Classes
 {
-    public class MyManagedChatServer : IManagedChat
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
+    public class MyChatServer : IChatContract
     {
-        private IChatClientsManager _clientsManager;
-
-        public IChatClientsManager ClientsManager
-        {
-            get => _clientsManager;
-            set => _clientsManager = value;
-        }
-
         public void SendToMainChat(string message)
         {
             var channel = OperationContext.Current.Channel as IDuplexContextChannel;

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows;
 using ChatLibrary.Classes;
+using ChatLibrary.Interfaces;
 
 namespace WpfChatServer
 {
@@ -14,12 +16,11 @@ namespace WpfChatServer
     /// </summary>
     public partial class App : Application
     {
+        MyChatPresenter _presenter = null;
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             var mainWindow = new MainWindow { Title = "Chat SERVER" };
-            var manager = new MyChatClientsManager();
-            var chat = new MyManagedChatServer{ ClientsManager = manager };
-            var presenter = new MyChatPresenter { View = mainWindow, Chat = chat };
+            var _presenter = new MyChatPresenter(mainWindow);
             mainWindow.Show();
         }
 
