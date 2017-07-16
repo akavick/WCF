@@ -3,21 +3,19 @@ using System.Windows.Controls;
 
 namespace WpfChatControlLibrary
 {
-    /// <summary>
-    /// Логика взаимодействия для TabFullChatControl.xaml
-    /// </summary>
-    public partial class TabFullChatControl : UserControl
+    public partial class TabFullChatControl
     {
         public TabControl TalksTabControl { get; }
         public FullChatControl MainChat { get; }
-        public Dictionary<ChatControl, TabItem> PrivateTalks { get; }
+        public HashSet<ChatControl> PrivateTalks { get; }
 
         public TabFullChatControl()
         {
             InitializeComponent();
             TalksTabControl = _talksTabControl;
-            PrivateTalks = new Dictionary<ChatControl, TabItem>();
+            PrivateTalks = new HashSet<ChatControl>();
             MainChat = _fullChatControl;
+            MainChat.TabItem = _mainChatTab;
         }
 
     }

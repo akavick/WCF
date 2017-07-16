@@ -2,10 +2,7 @@
 
 namespace WpfChatControlLibrary
 {
-    /// <summary>
-    /// Логика взаимодействия для FullChatControl.xaml
-    /// </summary>
-    public partial class FullChatControl : UserControl
+    public partial class FullChatControl
     {
         public RichTextBox ChatRichTextBox { get; }
         public RichTextBox MessageRichTextBox { get; }

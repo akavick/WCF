@@ -10,6 +10,7 @@
         x:Name="_talksTabControl"
         x:FieldModifier="private">
         <TabItem
+            x:Name="_mainChatTab"
             Header="MainChat">
             <local:FullChatControl
                 x:Name="_fullChatControl"

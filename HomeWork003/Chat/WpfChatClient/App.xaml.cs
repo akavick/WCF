@@ -8,10 +8,17 @@ using System.Windows;
 
 namespace WpfChatClient
 {
-    /// <summary>
-    /// Логика взаимодействия для App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            string userName = "User";
+            if (e.Args.Length > 0)
+            {
+                userName = e.Args[0];
+            }
+            var mainWindow = new MainWindow(userName);
+            mainWindow.Show();
+        }
     }
 }

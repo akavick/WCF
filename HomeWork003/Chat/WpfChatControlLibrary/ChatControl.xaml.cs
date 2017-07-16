@@ -2,10 +2,7 @@ using System.Windows.Controls;
 
 namespace WpfChatControlLibrary
 {
-    /// <summary>
-    /// Логика взаимодействия для ChatControl.xaml
-    /// </summary>
-    public partial class ChatControl : UserControl
+    public partial class ChatControl
     {
         public RichTextBox ChatRichTextBox { get; }
         public RichTextBox MessageRichTextBox { get; }
