@@ -41,7 +41,16 @@ namespace WpfChatClient
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            try
+            {
+                var c = _server as IChatContractChannel;
+                var a = c.LocalAddress.ToString();
+                MessageBox.Show(a);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.ToString());
+            }
         }
 
         private void ClientsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -147,7 +156,7 @@ namespace WpfChatClient
         public void FullRefreshClientList(string[] names)
         {
             Chat.MainChat.ClientsListBox.Items.Clear();
-            foreach (var name in names)
+            foreach (var name in names.Distinct())
                 Chat.MainChat.ClientsListBox.Items.Add(name);
         }
 

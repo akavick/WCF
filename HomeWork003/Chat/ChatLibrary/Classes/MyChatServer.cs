@@ -16,8 +16,11 @@ namespace ChatLibrary.Classes
         //    var clientChannel = callback as IClientChannel;
         //}
 
+        #region Static
+
         private static readonly ConcurrentDictionary<IChatCallback, string> Clients; //todo: разделить
         private static readonly ConcurrentDictionary<string, IChatCallback> Names;
+
 
         static MyChatServer()
         {
@@ -27,25 +30,18 @@ namespace ChatLibrary.Classes
                 Names = new ConcurrentDictionary<string, IChatCallback>();
         }
 
-        private static IChatCallback GetCallback()
-        {
-            return OperationContext.Current.GetCallbackChannel<IChatCallback>();
-        }
 
-        private static string GetFullMessage(IChatCallback sender, string message)
-        {
-            var time = DateTime.Now.ToLongTimeString();
-            var name = Clients[sender];
-            return $"{time,-10}{name + ":",-15}{message}";
-        }
-
-        private static string GetFullMessage(string name, string message)
-        {
-            var time = DateTime.Now.ToLongTimeString();
-            return $"{time,-10}{name + ":",-15}{message}";
-        }
+        private static IChatCallback Callback => OperationContext.Current.GetCallbackChannel<IChatCallback>();
 
 
+        private static string GetFullMessage(IChatCallback sender, string message) 
+            => $"{DateTime.Now.ToLongTimeString(),-10}{Clients[sender] + ":",-15}{message}";
+
+
+        private static string GetFullMessage(string name, string message) 
+            => $"{DateTime.Now.ToLongTimeString(),-10}{name + ":",-15}{message}";
+
+        #endregion
 
 
         #region IChatContract
@@ -56,14 +52,14 @@ namespace ChatLibrary.Classes
             {
                 if (string.IsNullOrEmpty(message))
                     return;
-                var sender = GetCallback();
+                var sender = Callback;
                 var msg = GetFullMessage(sender, message);
 
-                foreach (var client in Clients)
+                foreach (var client in Clients.Keys)
                 {
                     try
                     {
-                        client.Key.RefreshMainChat(msg);
+                        client.RefreshMainChat(msg);
                     }
                     catch (Exception e)
                     {
@@ -77,6 +73,7 @@ namespace ChatLibrary.Classes
             }
         }
 
+
         public void MessageFromClientToPersonalChat(string reciever, string message, bool sendToSender = true)
         {
             try
@@ -84,7 +81,7 @@ namespace ChatLibrary.Classes
                 if (string.IsNullOrEmpty(message))
                     return;
                 var rec = Names[reciever];
-                var sender = GetCallback();
+                var sender = Callback;
                 var senderName = Clients[sender];
                 var msg = GetFullMessage(sender, message);
                 rec.RefreshPersonalChat(senderName, msg, !sendToSender);
@@ -99,11 +96,12 @@ namespace ChatLibrary.Classes
             }
         }
 
+
         public void ClientIn(string name)
         {
             try
             {
-                var newClient = GetCallback();
+                var newClient = Callback;
                 if (Clients.ContainsKey(newClient) || Names.ContainsKey(name))
                     return;
                 var success = Clients.TryAdd(newClient, name) && Names.TryAdd(name, newClient);
@@ -124,14 +122,14 @@ namespace ChatLibrary.Classes
                     clientChannel.Faulted += ClientChannel_Faulted;
                 }
 
-                foreach (var client in Clients)
+                foreach (var client in Clients.Keys)
                 {
                     try
                     {
-                        if (client.Key == newClient)
-                            client.Key.FullRefreshClientList(Names.Keys.ToArray());
+                        if (client == newClient)
+                            client.FullRefreshClientList(Names.Keys.ToArray());
                         else
-                            client.Key.RefreshClientList(name);
+                            client.RefreshClientList(name);
                     }
                     catch (Exception e)
                     {
@@ -145,26 +143,30 @@ namespace ChatLibrary.Classes
             }
         }
 
+
         private void ClientChannel_Faulted(object sender, EventArgs e)
         {
             ClientOut();
         }
+
 
         private void ClientChannel_Closing(object sender, EventArgs e)
         {
             ClientOut();
         }
 
+
         private void ClientChannel_Closed(object sender, EventArgs e)
         {
             ClientOut();
         }
 
+
         public void ClientOut()
         {
             try
             {
-                var exitingClient = GetCallback();
+                var exitingClient = Callback;
                 if (!Clients.ContainsKey(exitingClient))
                     return;
                 var quitMessage = $"***** {Clients[exitingClient]} покинул беседу. *****";
