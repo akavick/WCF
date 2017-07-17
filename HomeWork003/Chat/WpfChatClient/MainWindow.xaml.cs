@@ -23,6 +23,8 @@ namespace WpfChatClient
         private readonly string _userName;
         private readonly IChatContract _server;
         private readonly HashSet<TabItem> _finishedTalks = new HashSet<TabItem>();
+        private readonly object _listLocker = new object();
+        private readonly object _chatLocker = new object();
 
 
         public MainWindow(string userName)
@@ -43,9 +45,9 @@ namespace WpfChatClient
         {
             try
             {
-                var c = _server as IChatContractChannel;
-                var a = c.LocalAddress.ToString();
-                MessageBox.Show(a);
+                //var c = _server as IChatContractChannel;
+                //var a = c.LocalAddress.ToString();
+                //MessageBox.Show(Chat.MainChat.ClientsListBox.Items.CanSort.ToString());
             }
             catch (Exception exception)
             {
@@ -86,7 +88,7 @@ namespace WpfChatClient
             => new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
 
 
-        private void ClearChat(ChatControl chat) 
+        private void ClearChat(ChatControl chat)
             => GetTextFromRichTextBox(chat.MessageRichTextBox).Text = GetTextFromRichTextBox(chat.ChatRichTextBox).Text = "";
 
 
@@ -131,8 +133,11 @@ namespace WpfChatClient
 
         #region IChatCallback
 
-        public void RefreshMainChat(string message) 
-            => GetChatText().Text += message;
+        public void RefreshMainChat(string message)
+        {
+            lock (_chatLocker)
+                GetChatText().Text += message;
+        }
 
 
         public void RefreshPersonalChat(string name, string message, bool talkFinished)
@@ -146,18 +151,37 @@ namespace WpfChatClient
 
         public void RefreshClientList(string name, bool quitted = false)
         {
-            if (quitted)
-                Chat.MainChat.ClientsListBox.Items.Remove(name);
-            else
-                Chat.MainChat.ClientsListBox.Items.Add(name);
+            lock (_listLocker)
+            {
+                if (quitted)
+                    Chat.MainChat.ClientsListBox.Items.Remove(name);
+                else
+                {
+                    var tempList = new SortedSet<string>(Chat.MainChat.ClientsListBox.Items.Cast<string>());
+                    if (!tempList.Contains(name))
+                        tempList.Add(name);
+                    Chat.MainChat.ClientsListBox.Items.Clear();
+                    foreach (var element in tempList)
+                    {
+                        if (element != _userName)
+                            Chat.MainChat.ClientsListBox.Items.Add(element);
+                    }
+                }
+            }
         }
 
 
         public void FullRefreshClientList(string[] names)
         {
-            Chat.MainChat.ClientsListBox.Items.Clear();
-            foreach (var name in names.Distinct())
-                Chat.MainChat.ClientsListBox.Items.Add(name);
+            lock (_listLocker)
+            {
+                Chat.MainChat.ClientsListBox.Items.Clear();
+                foreach (var name in names.Distinct().OrderBy(n => n).ToArray())
+                {
+                    if (name != _userName)
+                        Chat.MainChat.ClientsListBox.Items.Add(name);
+                }
+            }
         }
 
         #endregion

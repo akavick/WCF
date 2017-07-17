@@ -19,15 +19,12 @@ namespace ChatLibrary.Classes
         #region Static
 
         private static readonly ConcurrentDictionary<IChatCallback, string> Clients; //todo: разделить
-        private static readonly ConcurrentDictionary<string, IChatCallback> Names;
-
+        private static readonly object Locker = new object();
 
         static MyChatServer()
         {
             if (Clients == null)
                 Clients = new ConcurrentDictionary<IChatCallback, string>();
-            if (Names == null)
-                Names = new ConcurrentDictionary<string, IChatCallback>();
         }
 
 
@@ -63,13 +60,13 @@ namespace ChatLibrary.Classes
                     }
                     catch (Exception e)
                     {
-
+                        throw;
                     }
                 }
             }
             catch (Exception e)
             {
-
+                throw;
             }
         }
 
@@ -80,7 +77,7 @@ namespace ChatLibrary.Classes
             {
                 if (string.IsNullOrEmpty(message))
                     return;
-                var rec = Names[reciever];
+                var rec = Clients.SingleOrDefault(c => c.Value == reciever).Key;
                 var sender = Callback;
                 var senderName = Clients[sender];
                 var msg = GetFullMessage(sender, message);
@@ -92,54 +89,58 @@ namespace ChatLibrary.Classes
             }
             catch (Exception e)
             {
-
+                throw;
             }
         }
 
 
         public void ClientIn(string name)
         {
-            try
+            lock (Locker)
             {
-                var newClient = Callback;
-                if (Clients.ContainsKey(newClient) || Names.ContainsKey(name))
-                    return;
-                var success = Clients.TryAdd(newClient, name) && Names.TryAdd(name, newClient);
-                if (!success)
+                try
                 {
-                    IChatCallback client;
-                    Names.TryRemove(name, out client);
-                    string errorClientName;
-                    Clients.TryRemove(newClient, out errorClientName);
-                    throw new Exception("Не удалось добавить клиента " + name);
-                    //закрыть?
-                }
-                var clientChannel = newClient as IClientChannel;
-                if (clientChannel != null)
-                {
-                    clientChannel.Closed += ClientChannel_Closed;
-                    clientChannel.Closing += ClientChannel_Closing;
-                    clientChannel.Faulted += ClientChannel_Faulted;
-                }
-
-                foreach (var client in Clients.Keys)
-                {
-                    try
+                    var newClient = Callback;
+                    if (Clients.ContainsKey(newClient))
+                        return;
+                    var success = Clients.TryAdd(newClient, name);
+                    //if (!success)
+                    //{
+                    //    throw new Exception("Не удалось добавить клиента " + name);
+                    //    //закрыть?
+                    //}
+                    var clientChannel = newClient as IClientChannel;
+                    if (clientChannel != null)
                     {
-                        if (client == newClient)
-                            client.FullRefreshClientList(Names.Keys.ToArray());
-                        else
-                            client.RefreshClientList(name);
+                        clientChannel.Closed += ClientChannel_Closed;
+                        clientChannel.Closing += ClientChannel_Closing;
+                        clientChannel.Faulted += ClientChannel_Faulted;
                     }
-                    catch (Exception e)
+
+                    foreach (var client in Clients.Keys)
                     {
-
+                        try
+                        {
+                            if (client == newClient)
+                                client.FullRefreshClientList(Clients.Values.ToArray());
+                            else
+                            {
+                                client.RefreshClientList(name);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            throw;
+                        }
                     }
-                }
-            }
-            catch (Exception e)
-            {
 
+                    var enterMessage = $"***** {name} входит в чат. *****";
+                    MessageFromClientToMainChat(enterMessage);
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
             }
         }
 
@@ -169,19 +170,18 @@ namespace ChatLibrary.Classes
                 var exitingClient = Callback;
                 if (!Clients.ContainsKey(exitingClient))
                     return;
-                var quitMessage = $"***** {Clients[exitingClient]} покинул беседу. *****";
+                var quitMessage = $"***** {Clients[exitingClient]} покидает чат. *****";
                 MessageFromClientToMainChat(quitMessage);
 
-                IChatCallback client;
                 string exitedClientName;
-                var success = Clients.TryRemove(exitingClient, out exitedClientName) && Names.TryRemove(exitedClientName, out client);
+                var success = Clients.TryRemove(exitingClient, out exitedClientName);
                 //закрыть?
                 if (!success)
                     throw new Exception($"Не удалось удалить клиента {exitedClientName}");
             }
             catch (Exception e)
             {
-
+                throw;
             }
         }
 

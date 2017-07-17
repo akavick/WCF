@@ -20,7 +20,7 @@ namespace TestStarter
             var names = namesMan
                 .Concat(namesWoman)
                 .OrderBy(n => random.Next())
-                .Take(3)
+                .Take(10)
                 .ToArray();
 
             foreach (var name in names)
