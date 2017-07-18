@@ -20,25 +20,37 @@ namespace WpfChatClient
 {
     public partial class MainWindow : IChatContractCallback /*IChatView*/
     {
-        private readonly string _userName;
-        private readonly IChatContract _server;
         private readonly HashSet<TabItem> _finishedTalks = new HashSet<TabItem>();
         private readonly object _listLocker = new object();
         private readonly object _chatLocker = new object();
 
+        private IChatContract _server;
+        private string _userName = null;
 
-        public MainWindow(string userName)
+        public MainWindow()
         {
-            Title = _userName = userName;
             InitializeComponent();
+            Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
             Chat.MainChat.SendButton.Click += SendButton_Click;
             Chat.MainChat.ClientsListBox.SelectionMode = SelectionMode.Single;
             Chat.MainChat.ClientsListBox.MouseDoubleClick += ClientsListBox_MouseDoubleClick;
             GetChatText().Text = GetMessageText().Text = "";
-            InstanceContext ic = new InstanceContext(this);
-            _server = new ChatContractClient(ic); //todo: разделить
-            _server.IamIn(_userName);
             Closing += MainWindow_Closing;
+        }
+
+        public void InitializeClient(string userName, IChatContract server)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return;
+            Title = _userName = userName;
+            if (server == null)
+                return;
+            _server = server;
+            _server.IamIn(_userName);
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -72,7 +84,7 @@ namespace WpfChatClient
             if (string.IsNullOrEmpty(text))
                 return;
             rtfMessage.Text = "";
-            _server.SendToMainChat(text);
+            _server.SendToMainChat(_userName, text);
         }
 
 
@@ -106,7 +118,7 @@ namespace WpfChatClient
                 if (string.IsNullOrEmpty(text))
                     return;
                 rtfMessage.Text = "";
-                _server.SendToPersonalChat(name, text, true);
+                _server.SendToPersonalChat(_userName, name, text, true);
             }
             privateTalk.SendButton.Click += OnSendButtonOnClick;
             var tabItem = new TabItem { Header = name, Content = privateTalk };
@@ -117,7 +129,7 @@ namespace WpfChatClient
                 {
                     var quitMessage = $"***** {_userName} покинул беседу. *****";
                     if (!_finishedTalks.Contains(tabItem))
-                        _server.SendToPersonalChat(name, quitMessage, false);
+                        _server.SendToPersonalChat(_userName, name, quitMessage, false);
                     else
                         _finishedTalks.Remove(tabItem);
                 }
@@ -176,6 +188,7 @@ namespace WpfChatClient
             lock (_listLocker)
             {
                 Chat.MainChat.ClientsListBox.Items.Clear();
+                Chat.MainChat.ClientsListBox.Items.Add(names.Length);
                 foreach (var name in names.Distinct().OrderBy(n => n).ToArray())
                 {
                     if (name != _userName)

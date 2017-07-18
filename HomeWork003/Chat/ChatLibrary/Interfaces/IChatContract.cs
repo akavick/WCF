@@ -6,10 +6,10 @@ namespace ChatLibrary.Interfaces
     public interface IChatContract
     {
         [OperationContract(IsOneWay = true, Name = "SendToMainChat")]
-        void MessageFromClientToMainChat(string message);
+        void MessageFromClientToMainChat(string sender, string message);
 
         [OperationContract(IsOneWay = true, Name = "SendToPersonalChat")]
-        void MessageFromClientToPersonalChat(string reciever, string message, bool sendToSender = true);
+        void MessageFromClientToPersonalChat(string sender, string reciever, string message, bool sendToSender = true);
 
         [OperationContract(IsOneWay = true, Name = "IamIn")]
         void ClientIn(string name);
