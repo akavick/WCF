@@ -60,13 +60,13 @@ namespace ChatLibrary.Classes
                     }
                     catch (Exception e)
                     {
-                        throw;
+                        
                     }
                 }
             }
             catch (Exception e)
             {
-                throw;
+                
             }
         }
 
@@ -89,7 +89,7 @@ namespace ChatLibrary.Classes
             }
             catch (Exception e)
             {
-                throw;
+                
             }
         }
 
@@ -110,6 +110,7 @@ namespace ChatLibrary.Classes
                     //    //закрыть?
                     //}
                     var clientChannel = newClient as IClientChannel;
+
                     if (clientChannel != null)
                     {
                         clientChannel.Closed += ClientChannel_Closed;
@@ -130,7 +131,7 @@ namespace ChatLibrary.Classes
                         }
                         catch (Exception e)
                         {
-                            throw;
+                            
                         }
                     }
 
@@ -139,7 +140,7 @@ namespace ChatLibrary.Classes
                 }
                 catch (Exception e)
                 {
-                    throw;
+                    
                 }
             }
         }
@@ -175,13 +176,16 @@ namespace ChatLibrary.Classes
 
                 string exitedClientName;
                 var success = Clients.TryRemove(exitingClient, out exitedClientName);
-                //закрыть?
+
+                var clientChannel = exitingClient as IClientChannel;
+                clientChannel?.Close();
+
                 if (!success)
                     throw new Exception($"Не удалось удалить клиента {exitedClientName}");
             }
             catch (Exception e)
             {
-                throw;
+                
             }
         }
 

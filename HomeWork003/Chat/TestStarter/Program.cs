@@ -20,13 +20,13 @@ namespace TestStarter
             var names = namesMan
                 .Concat(namesWoman)
                 .OrderBy(n => random.Next())
-                .Take(10)
+                .Take(5)
                 .ToArray();
 
             foreach (var name in names)
             {
                 Process.Start(@"..\..\..\WpfChatClient\bin\Debug\WpfChatClient.exe", name);
-                Task.Delay(100).Wait();
+                Task.Delay(10).Wait();
             }
         }
     }
