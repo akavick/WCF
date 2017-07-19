@@ -80,7 +80,15 @@ namespace ChatLibrary.Classes
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        Console.WriteLine(e.Message);
+                        try
+                        {
+                            Console.WriteLine(Clients.Single(c => c.Value == client).Key);
+                        }
+                        catch (Exception ee)
+                        {
+                            Console.WriteLine(ee.Message);
+                        }
                     }
                 }
             });
@@ -167,14 +175,14 @@ namespace ChatLibrary.Classes
                 //    throw new Exception("Не удалось добавить клиента " + name);
                 //    //закрыть?
                 //}
-                var clientChannel = newClient as IClientChannel;
+                //var clientChannel = newClient as IClientChannel;
 
-                if (clientChannel != null)
-                {
-                    clientChannel.Closed += ClientChannel_Closed;
-                    clientChannel.Closing += ClientChannel_Closing;
-                    clientChannel.Faulted += ClientChannel_Faulted;
-                }
+                //if (clientChannel != null)
+                //{
+                //    clientChannel.Closed += ClientChannel_Closed;
+                //    clientChannel.Closing += ClientChannel_Closing;
+                //    clientChannel.Faulted += ClientChannel_Faulted;
+                //}
 
                 foreach (var client in Clients.Values.ToArray())
                 {
@@ -189,7 +197,15 @@ namespace ChatLibrary.Classes
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        Console.WriteLine(e.Message);
+                        try
+                        {
+                            Console.WriteLine(Clients.Single(c => c.Value == client).Key);
+                        }
+                        catch (Exception ee)
+                        {
+                            Console.WriteLine(ee.Message);
+                        }
                     }
                 }
 
@@ -203,22 +219,22 @@ namespace ChatLibrary.Classes
         }
 
 
-        private void ClientChannel_Faulted(object sender, EventArgs e)
-        {
-            //ClientOut();
-        }
+        //private void ClientChannel_Faulted(object sender, EventArgs e)
+        //{
+        //    //ClientOut();
+        //}
 
 
-        private void ClientChannel_Closing(object sender, EventArgs e)
-        {
-            //ClientOut();
-        }
+        //private void ClientChannel_Closing(object sender, EventArgs e)
+        //{
+        //    //ClientOut();
+        //}
 
 
-        private void ClientChannel_Closed(object sender, EventArgs e)
-        {
-            //ClientOut();
-        }
+        //private void ClientChannel_Closed(object sender, EventArgs e)
+        //{
+        //    //ClientOut();
+        //}
 
 
         //public void ClientOut()

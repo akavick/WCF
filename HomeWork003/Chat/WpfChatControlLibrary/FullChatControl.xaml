@@ -29,7 +29,8 @@
         <ListBox
             x:Name="_clientsListBox"
             x:FieldModifier="private"
-            Grid.Column="2"
-            Grid.RowSpan="3" />
+            Grid.Column="2" Margin="0,0,0,37" />
+        <Label x:Name="_clientsCountLabel" Content="Label" Grid.Column="2" Height="35" VerticalAlignment="Bottom" Margin="0,0,50,0"/>
+        <Label x:Name="_label" Content="Label" Grid.Column="2" Margin="50,0,0,0" Height="35" VerticalAlignment="Bottom"/>
     </Grid>
 </UserControl>

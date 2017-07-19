@@ -12,8 +12,10 @@ namespace TestStarter
 {
     class FakeClient : IChatContractCallback
     {
-        private readonly IChatContract _server;
-        private readonly string _name;
+        #region Init
+
+        public readonly IChatContract _server;
+        public readonly string _name;
 
         public FakeClient(string name)
         {
@@ -23,35 +25,30 @@ namespace TestStarter
             _server.IamIn(_name);
         }
 
+        #endregion
+
+        #region NotUsed
+
         public void RefreshMainChat(string message)
         {
-            //Console.WriteLine($"{_name}: {message}");
-        }
 
-        public void RefreshPersonalChat(string name, string message, bool finished)
-        {
-            //Console.WriteLine($"{name}: {message}");
         }
 
         public void RefreshClientList(string name, bool quitted)
         {
-            //lock (Locker)
-            //{
-            //    Console.WriteLine($"RefreshLIST for {_name}: {name}");
-            //}
+
         }
 
         public void FullRefreshClientList(string[] names)
         {
-            //lock (Locker)
-            //{
-            //    Console.WriteLine($"LIST for {_name}");
-            //    foreach (var name in names)
-            //    {
-            //        Console.WriteLine(name);
-            //    }
-            //    Console.WriteLine();
-            //}
+
+        }
+
+        #endregion
+
+        public void RefreshPersonalChat(string name, string message, bool finished)
+        {
+            _server.SendToPersonalChat(_name, name, "ответь", false);
         }
     }
 
@@ -69,20 +66,30 @@ namespace TestStarter
             var names = namesMan
                 .Concat(namesWoman)
                 .OrderBy(n => random.Next())
+                .Take(10)
                 .ToArray();
 
-            Process.Start(@"..\..\..\WpfChatClient\bin\Debug\WpfChatClient.exe", "AKAVICK");
-            Task.Delay(1000).Wait();
+            Task.Delay(2000).Wait();
 
             List<FakeClient> clients = new List<FakeClient>();
             foreach (var name in names)
             {
                 clients.Add(new FakeClient(name));
                 //Console.WriteLine(name);
-                //Process.Start(@"..\..\..\WpfChatClient\bin\Debug\WpfChatClient.exe", name);
                 //Task.Delay(1000).Wait();
             }
-            
+
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(random.Next(50, 5001));
+                    var client = clients[random.Next(clients.Count)];
+                    client._server.SendToMainChat(client._name, "blah-blah");
+                }
+            });
+
+
 
 
             Console.ReadKey(true);

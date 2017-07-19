@@ -18,13 +18,13 @@ namespace WpfChatClient
         {
             try
             {
-                var userName = "User";
+                var userName = "AKAVICK";
                 if (e.Args.Length > 0)
                     userName = e.Args[0];
                 _window = new MainWindow();
                 var ic = new InstanceContext(_window);
                 _server = new ChatContractClient(ic);
-                _window.InitializeClient("AKAVICK", _server);
+                _window.InitializeClient(userName, _server);
                 _window.Show();
             }
             catch (Exception exception)

@@ -10,6 +10,8 @@ namespace WpfChatControlLibrary
         public Button SendButton { get; }
         public ListBox ClientsListBox { get; }
         public TabItem TabItem { get; set; }
+        public Label ClientsCountLabel { get; set; }
+        public Label SomeLabel { get; set; }
 
         public FullChatControl()
         {
@@ -18,6 +20,8 @@ namespace WpfChatControlLibrary
             MessageRichTextBox = _chatControl.MessageRichTextBox;
             SendButton = _chatControl.SendButton;
             ClientsListBox = _clientsListBox;
+            ClientsCountLabel = _clientsCountLabel;
+            SomeLabel = _label;
             TabItem = null;
         }
     }
