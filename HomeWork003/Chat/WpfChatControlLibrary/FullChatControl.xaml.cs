@@ -11,7 +11,6 @@ namespace WpfChatControlLibrary
         public ListBox ClientsListBox { get; }
         public TabItem TabItem { get; set; }
         public Label ClientsCountLabel { get; set; }
-        public Label SomeLabel { get; set; }
 
         public FullChatControl()
         {
@@ -21,7 +20,6 @@ namespace WpfChatControlLibrary
             SendButton = _chatControl.SendButton;
             ClientsListBox = _clientsListBox;
             ClientsCountLabel = _clientsCountLabel;
-            SomeLabel = _label;
             TabItem = null;
         }
     }

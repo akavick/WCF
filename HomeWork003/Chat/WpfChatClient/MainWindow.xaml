@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfChatClient"
         xmlns:wpfChatControlLibrary="clr-namespace:WpfChatControlLibrary;assembly=WpfChatControlLibrary"
         mc:Ignorable="d"
-        Height="350" Width="525">
+        Height="600" Width="800">
     <Grid>
         <wpfChatControlLibrary:TabFullChatControl
             x:Name="Chat" />

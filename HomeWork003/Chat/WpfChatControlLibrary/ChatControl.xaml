@@ -6,46 +6,46 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:WpfChatControlLibrary"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="300">
+    d:DesignHeight="600"
+    d:DesignWidth="600">
     <Grid>
-        <Grid.Background>
-            <SolidColorBrush
+        <Grid Margin="0,0,0,40">
+            <Grid.Background>
+                <SolidColorBrush
                 Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" />
-        </Grid.Background>
-        <Grid.RowDefinitions>
-            <RowDefinition
-                Height="5*" />
-            <RowDefinition
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition
+                Height="4*" />
+                <RowDefinition
                 Height="Auto" />
-            <RowDefinition
-                Height="2*" />
-            <RowDefinition
+                <RowDefinition
                 Height="1*" />
-        </Grid.RowDefinitions>
-        <GridSplitter
+            </Grid.RowDefinitions>
+            <GridSplitter
             Grid.Row="1"
             Grid.Column="0"
             Height="3"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center" />
-        <RichTextBox
+            <RichTextBox
             x:Name="_chatRichTextBox"
             x:FieldModifier="private"
             Grid.Row="0"
             IsReadOnly="True"
             VerticalScrollBarVisibility="Auto">
-        </RichTextBox>
-        <RichTextBox
+            </RichTextBox>
+            <RichTextBox
             x:Name="_messageRichTextBox"
             x:FieldModifier="private"
             Grid.Row="2"/>
-        <Grid Grid.Row="3">
+        </Grid>
+        <Grid Height="40" VerticalAlignment="Bottom">
             <Button
-                x:Name="_sendMessageButton"
-                x:FieldModifier="private"
-                Content="Send"
-                Margin="0,3,1,1" HorizontalAlignment="Right" Width="82" />
+            x:Name="_sendMessageButton"
+            x:FieldModifier="private"
+            Content="Send"
+            Margin="0,2,2,2" HorizontalAlignment="Right" Width="66" />
         </Grid>
     </Grid>
 </UserControl>
