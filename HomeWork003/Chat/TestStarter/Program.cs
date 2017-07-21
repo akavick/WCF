@@ -89,7 +89,7 @@ namespace TestStarter
                 }
             });
 
-
+            Process.Start(@"..\..\..\WpfChatClient\bin\Debug\WpfChatClient.exe", "anyUser");
 
 
             Console.ReadKey(true);
