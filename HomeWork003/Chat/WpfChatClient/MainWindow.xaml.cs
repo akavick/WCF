@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -15,14 +16,15 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfChatClient.ChatServiceReference;
 using WpfChatControlLibrary;
+using ChatControl = WpfChatControlLibrary.Classes.ChatControl;
 
 namespace WpfChatClient
 {
     public partial class MainWindow : IChatContractCallback /*IChatView*/
     {
-        private readonly HashSet<TabItem> _finishedTalks = new HashSet<TabItem>();
         private readonly object _listLocker = new object();
         private readonly object _chatLocker = new object();
+        private readonly ConcurrentDictionary<string, string> _histories = new ConcurrentDictionary<string, string>();
 
         private IChatContract _server;
         private string _userName = null;
@@ -135,6 +137,8 @@ namespace WpfChatClient
                     return privateTalk;
                 privateTalk = new ChatControl();
                 ClearChat(privateTalk);
+                if (_histories.ContainsKey(name))
+                    GetTextFromRichTextBox(privateTalk.ChatRichTextBox).Text = _histories[name];
                 void OnSendButtonOnClick(object sender, RoutedEventArgs eventArgs)
                 {
                     var rtfMessage = GetTextFromRichTextBox(privateTalk.MessageRichTextBox);
@@ -149,14 +153,7 @@ namespace WpfChatClient
                 void OnTabItemOnMouseDoubleClick(object sender, MouseButtonEventArgs eventArgs)
                 {
                     var text = GetTextFromRichTextBox(privateTalk.ChatRichTextBox).Text;
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        var quitMessage = $"***** {_userName} покинул беседу. *****";
-                        if (!_finishedTalks.Contains(tabItem))
-                            _server.SendToPersonalChat(_userName, name, quitMessage, false);
-                        else
-                            _finishedTalks.Remove(tabItem);
-                    }
+                    _histories.AddOrUpdate(name, text, (oldT, newT) => newT);
                     Chat.PrivateTalks.Remove(privateTalk);
                     Chat.TalksTabControl.Items.Remove(tabItem);
                 }
@@ -189,8 +186,6 @@ namespace WpfChatClient
             try
             {
                 var talk = GetOrCreateTab(name);
-                if (talkFinished)
-                    _finishedTalks.Add(talk.TabItem);
                 GetTextFromRichTextBox(talk.ChatRichTextBox).Text += message;
             }
             catch (Exception e)
@@ -237,7 +232,8 @@ namespace WpfChatClient
                 try
                 {
                     Chat.MainChat.ClientsListBox.Items.Clear();
-                    foreach (var name in names.Distinct().OrderBy(n => n).ToArray())
+                    names = names.Distinct().OrderBy(n => n).ToArray();
+                    foreach (var name in names)
                     {
                         if (name != _userName)
                             Chat.MainChat.ClientsListBox.Items.Add(name);

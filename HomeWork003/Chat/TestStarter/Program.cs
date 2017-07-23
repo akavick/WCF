@@ -3,60 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
-using TestStarter.ChatServiceReference;
 
 namespace TestStarter
 {
-    class FakeClient : IChatContractCallback
-    {
-        #region Init
-
-        public readonly IChatContract _server;
-        public readonly string _name;
-
-        public FakeClient(string name)
-        {
-            _name = name;
-            var ic = new InstanceContext(this);
-            _server = new ChatContractClient(ic);
-            _server.IamIn(_name);
-        }
-
-        #endregion
-
-        #region NotUsed
-
-        public void RefreshMainChat(string message)
-        {
-
-        }
-
-        public void RefreshClientList(string name, bool quitted)
-        {
-
-        }
-
-        public void FullRefreshClientList(string[] names)
-        {
-
-        }
-
-        #endregion
-
-        public void RefreshPersonalChat(string name, string message, bool finished)
-        {
-            _server.SendToPersonalChat(_name, name, "ответь", false);
-        }
-    }
-
-
-
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Console.Title = "TESTRUNNER";
 
@@ -71,7 +24,7 @@ namespace TestStarter
 
             Task.Delay(2000).Wait();
 
-            List<FakeClient> clients = new List<FakeClient>();
+            var clients = new List<FakeClient>();
             foreach (var name in names)
             {
                 clients.Add(new FakeClient(name));
@@ -85,8 +38,9 @@ namespace TestStarter
                 {
                     await Task.Delay(random.Next(50, 5001));
                     var client = clients[random.Next(clients.Count)];
-                    client._server.SendToMainChat(client._name, "blah-blah");
+                    client.Server.SendToMainChat(client.Name, "blah-blah");
                 }
+                // ReSharper disable once FunctionNeverReturns
             });
 
             Process.Start(@"..\..\..\WpfChatClient\bin\Debug\WpfChatClient.exe", "anyUser");

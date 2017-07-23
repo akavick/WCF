@@ -47,30 +47,35 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TabFullChatControl.xaml.cs">
+    <Compile Include="Classes\TabFullChatControl.xaml.cs">
       <DependentUpon>TabFullChatControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="ChatControl.xaml">
+    <Page Include="Classes\ChatControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="ChatControl.xaml.cs">
+    <Compile Include="Classes\ChatControl.xaml.cs">
       <DependentUpon>ChatControl.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="FullChatControl.xaml">
+    <Page Include="Classes\FullChatControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TabFullChatControl.xaml">
+    <Page Include="Classes\TabFullChatControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FullChatControl.xaml.cs">
+    <Compile Include="Classes\FullChatControl.xaml.cs">
       <DependentUpon>FullChatControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IChatControl.cs" />
+    <Compile Include="Interfaces\IChatHistory.cs" />
+    <Compile Include="Interfaces\IChatMessage.cs" />
+    <Compile Include="Interfaces\IFullChatControl.cs" />
+    <Compile Include="Interfaces\ITabFullChatControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -93,5 +98,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

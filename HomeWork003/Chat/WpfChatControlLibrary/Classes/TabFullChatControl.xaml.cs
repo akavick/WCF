@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace WpfChatControlLibrary
+namespace WpfChatControlLibrary.Classes
 {
     public partial class TabFullChatControl
     {
