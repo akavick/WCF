@@ -56,6 +56,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Classes\ChatControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Classes\FullChatControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Classes\TabFullChatControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,6 +75,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\ChatControl.xaml.cs">
+      <DependentUpon>ChatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\FullChatControl.xaml.cs">
+      <DependentUpon>FullChatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\TabFullChatControl.xaml.cs">
+      <DependentUpon>TabFullChatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Connected Services\ChatServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -109,12 +130,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WpfChatControlLibrary\WpfChatControlLibrary.csproj">
-      <Project>{5e9cbaa2-d493-41c6-9d5d-82011f229b17}</Project>
-      <Name>WpfChatControlLibrary</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

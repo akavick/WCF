@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
 using System.ServiceModel;
-using System.Threading.Tasks;
 using System.Windows;
-using WpfChatClient.ChatServiceReference;
+using WpfChatClient.Connected_Services.ChatServiceReference;
 
 namespace WpfChatClient
 {
-    public partial class App : Application
+    public partial class App
     {
         private MainWindow _window;
         private IChatContract _server;

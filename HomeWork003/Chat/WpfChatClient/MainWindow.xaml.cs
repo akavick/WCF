@@ -14,9 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WpfChatClient.ChatServiceReference;
-using WpfChatControlLibrary;
-using ChatControl = WpfChatControlLibrary.Classes.ChatControl;
+using WpfChatClient.Connected_Services.ChatServiceReference;
+using ChatControl = WpfChatClient.Classes.ChatControl;
 
 namespace WpfChatClient
 {

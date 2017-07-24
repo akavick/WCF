@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChatLibrary.Interfaces
+namespace ChatLibrary.ControlInterfaces
 {
     public interface IChatView
     {

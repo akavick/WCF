@@ -1,10 +1,8 @@
-using System;
 using System.Windows.Controls;
-using WpfChatControlLibrary.Interfaces;
 
-namespace WpfChatControlLibrary.Classes
+namespace WpfChatClient.Classes
 {
-    public partial class ChatControl : IChatControl
+    public partial class ChatControl
     {
         public RichTextBox ChatRichTextBox { get; }
         public RichTextBox MessageRichTextBox { get; }
@@ -20,19 +18,5 @@ namespace WpfChatControlLibrary.Classes
             TabItem = null;
         }
 
-        public IChatMessage GetWrittenMessage()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IChatHistory GetHistory()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PushNewMessage(IChatMessage message)
-        {
-            
-        }
     }
 }

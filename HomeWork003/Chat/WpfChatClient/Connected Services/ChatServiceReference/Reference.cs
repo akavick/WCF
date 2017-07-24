@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WpfChatClient.ChatServiceReference {
+namespace WpfChatClient.Connected_Services.ChatServiceReference {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ChatServiceReference.IChatContract", CallbackContract=typeof(WpfChatClient.ChatServiceReference.IChatContractCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ChatServiceReference.IChatContract", CallbackContract=typeof(IChatContractCallback))]
     public interface IChatContract {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToMainChat")]
@@ -51,12 +51,12 @@ namespace WpfChatClient.ChatServiceReference {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IChatContractChannel : WpfChatClient.ChatServiceReference.IChatContract, System.ServiceModel.IClientChannel {
+    public interface IChatContractChannel : IChatContract, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ChatContractClient : System.ServiceModel.DuplexClientBase<WpfChatClient.ChatServiceReference.IChatContract>, WpfChatClient.ChatServiceReference.IChatContract {
+    public partial class ChatContractClient : System.ServiceModel.DuplexClientBase<IChatContract>, IChatContract {
         
         public ChatContractClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {

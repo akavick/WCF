@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace WpfChatControlLibrary.Classes
+namespace WpfChatClient.Classes
 {
     public partial class FullChatControl
     {
