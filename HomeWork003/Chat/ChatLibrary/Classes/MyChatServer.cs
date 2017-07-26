@@ -129,7 +129,7 @@ namespace ChatLibrary.Classes
         }
 
 
-        public void MessageFromClientToPersonalChat(string sender, string reciever, string message, bool sendToSender = true)
+        public void MessageFromClientToPersonalChat(string sender, string reciever, string message)
         {
             try
             {
@@ -138,11 +138,10 @@ namespace ChatLibrary.Classes
                 var sen = GetCallback();
                 var rec = Clients[reciever];
                 var msg = GetFullMessage(sender, message);
-                rec.RefreshPersonalChat(sender, msg, !sendToSender);
+                rec.RefreshPersonalChat(sender, msg);
                 if (reciever == sender)
                     return;
-                if (sendToSender)
-                    sen.RefreshPersonalChat(reciever, msg);
+                sen.RefreshPersonalChat(reciever, msg);
             }
             catch (Exception e)
             {

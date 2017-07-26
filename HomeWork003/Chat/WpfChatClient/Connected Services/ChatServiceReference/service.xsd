@@ -15,7 +15,6 @@
         <xs:element minOccurs="0" name="sender" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="reciever" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="message" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="sendToSender" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

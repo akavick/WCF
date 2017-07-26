@@ -1,4 +1,4 @@
-﻿namespace ChatLibrary.ControlInterfaces
+﻿namespace WpfChatClient.Interfaces
 {
     public interface IChatMessage
     {

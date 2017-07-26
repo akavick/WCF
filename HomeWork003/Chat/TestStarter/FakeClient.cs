@@ -41,7 +41,7 @@ namespace TestStarter
 
         public void RefreshPersonalChat(string name, string message, bool finished)
         {
-            Server.SendToPersonalChat(Name, name, "ответь", false);
+            Server.SendToPersonalChat(Name, name, "ответь");
         }
     }
 }

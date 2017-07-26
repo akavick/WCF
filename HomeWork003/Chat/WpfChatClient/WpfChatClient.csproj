@@ -90,6 +90,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IChatControl.cs" />
+    <Compile Include="Interfaces\IChatHistory.cs" />
+    <Compile Include="Interfaces\IChatMessage.cs" />
+    <Compile Include="Interfaces\IChat.cs" />
+    <Compile Include="Interfaces\IFullChatControl.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -149,5 +154,6 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

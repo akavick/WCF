@@ -6,34 +6,23 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using WpfChatClient.Connected_Services.ChatServiceReference;
+using WpfChatClient.ChatServiceReference;
+using WpfChatClient.Interfaces;
 
 namespace WpfChatClient.Classes
 {
-    public partial class TabFullChatControl
+    public partial class TabFullChatControl : IChatContractCallback, IChat
     {
         private readonly object _listLocker = new object();
         private readonly object _chatLocker = new object();
         private readonly ConcurrentDictionary<string, string> _histories = new ConcurrentDictionary<string, string>();
+        private TabControl TalksTabControl { get; }
+        private FullChatControl MainChat { get; }
+        private HashSet<ChatControl> PrivateTalks { get; }
 
-        private IChatContract _server;
-        private string _userName;
 
-        public TabControl TalksTabControl { get; }
-        public FullChatControl MainChat { get; }
-        public HashSet<ChatControl> PrivateTalks { get; }
-
-        public string UserName
-        {
-            get => _userName;
-            set => _userName = value;
-        }
-
-        public IChatContract Server
-        {
-            get => _server;
-            set => _server = value;
-        }
+        public string UserName { get; set; }
+        public IChatContract Server { get; set; }
 
 
         public TabFullChatControl()
@@ -75,7 +64,7 @@ namespace WpfChatClient.Classes
                     if (string.IsNullOrEmpty(text))
                         return;
                     rtfMessage.Text = "";
-                    Server.SendToPersonalChat(UserName, name, text, true);
+                    Server.SendToPersonalChat(UserName, name, text);
                 }
                 privateTalk.SendButton.Click += OnSendButtonOnClick;
 

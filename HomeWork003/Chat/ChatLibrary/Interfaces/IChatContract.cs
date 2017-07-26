@@ -9,7 +9,7 @@ namespace ChatLibrary.Interfaces
         void MessageFromClientToMainChat(string sender, string message);
 
         [OperationContract(IsOneWay = true, Name = "SendToPersonalChat")]
-        void MessageFromClientToPersonalChat(string sender, string reciever, string message, bool sendToSender = true);
+        void MessageFromClientToPersonalChat(string sender, string reciever, string message);
 
         [OperationContract(IsOneWay = true, Name = "IamIn")]
         void ClientIn(string name);

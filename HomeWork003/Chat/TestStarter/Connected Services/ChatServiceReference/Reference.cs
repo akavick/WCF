@@ -22,10 +22,10 @@ namespace TestStarter.ChatServiceReference {
         System.Threading.Tasks.Task SendToMainChatAsync(string sender, string message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToPersonalChat")]
-        void SendToPersonalChat(string sender, string reciever, string message, bool sendToSender);
+        void SendToPersonalChat(string sender, string reciever, string message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToPersonalChat")]
-        System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message, bool sendToSender);
+        System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/IamIn")]
         void IamIn(string name);
@@ -86,12 +86,12 @@ namespace TestStarter.ChatServiceReference {
             return base.Channel.SendToMainChatAsync(sender, message);
         }
         
-        public void SendToPersonalChat(string sender, string reciever, string message, bool sendToSender) {
-            base.Channel.SendToPersonalChat(sender, reciever, message, sendToSender);
+        public void SendToPersonalChat(string sender, string reciever, string message) {
+            base.Channel.SendToPersonalChat(sender, reciever, message);
         }
         
-        public System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message, bool sendToSender) {
-            return base.Channel.SendToPersonalChatAsync(sender, reciever, message, sendToSender);
+        public System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message) {
+            return base.Channel.SendToPersonalChatAsync(sender, reciever, message);
         }
         
         public void IamIn(string name) {

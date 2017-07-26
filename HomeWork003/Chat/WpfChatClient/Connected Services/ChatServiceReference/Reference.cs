@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WpfChatClient.Connected_Services.ChatServiceReference {
+namespace WpfChatClient.ChatServiceReference {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ChatServiceReference.IChatContract", CallbackContract=typeof(IChatContractCallback))]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ChatServiceReference.IChatContract", CallbackContract=typeof(WpfChatClient.ChatServiceReference.IChatContractCallback))]
     public interface IChatContract {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToMainChat")]
@@ -22,10 +22,10 @@ namespace WpfChatClient.Connected_Services.ChatServiceReference {
         System.Threading.Tasks.Task SendToMainChatAsync(string sender, string message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToPersonalChat")]
-        void SendToPersonalChat(string sender, string reciever, string message, bool sendToSender);
+        void SendToPersonalChat(string sender, string reciever, string message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToPersonalChat")]
-        System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message, bool sendToSender);
+        System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/IamIn")]
         void IamIn(string name);
@@ -51,12 +51,12 @@ namespace WpfChatClient.Connected_Services.ChatServiceReference {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IChatContractChannel : IChatContract, System.ServiceModel.IClientChannel {
+    public interface IChatContractChannel : WpfChatClient.ChatServiceReference.IChatContract, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ChatContractClient : System.ServiceModel.DuplexClientBase<IChatContract>, IChatContract {
+    public partial class ChatContractClient : System.ServiceModel.DuplexClientBase<WpfChatClient.ChatServiceReference.IChatContract>, WpfChatClient.ChatServiceReference.IChatContract {
         
         public ChatContractClient(System.ServiceModel.InstanceContext callbackInstance) : 
                 base(callbackInstance) {
@@ -86,12 +86,12 @@ namespace WpfChatClient.Connected_Services.ChatServiceReference {
             return base.Channel.SendToMainChatAsync(sender, message);
         }
         
-        public void SendToPersonalChat(string sender, string reciever, string message, bool sendToSender) {
-            base.Channel.SendToPersonalChat(sender, reciever, message, sendToSender);
+        public void SendToPersonalChat(string sender, string reciever, string message) {
+            base.Channel.SendToPersonalChat(sender, reciever, message);
         }
         
-        public System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message, bool sendToSender) {
-            return base.Channel.SendToPersonalChatAsync(sender, reciever, message, sendToSender);
+        public System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message) {
+            return base.Channel.SendToPersonalChatAsync(sender, reciever, message);
         }
         
         public void IamIn(string name) {

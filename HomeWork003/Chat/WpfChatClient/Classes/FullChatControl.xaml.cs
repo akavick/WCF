@@ -1,8 +1,9 @@
 ﻿using System.Windows.Controls;
+using WpfChatClient.Interfaces;
 
 namespace WpfChatClient.Classes
 {
-    public partial class FullChatControl
+    public partial class FullChatControl : IFullChatControl
     {
         public RichTextBox ChatRichTextBox { get; }
         public RichTextBox MessageRichTextBox { get; }

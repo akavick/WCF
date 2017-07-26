@@ -47,12 +47,6 @@
   <ItemGroup>
     <Compile Include="Interfaces\IChatCallback.cs" />
     <Compile Include="Interfaces\IChatContract.cs" />
-    <Compile Include="ControlInterfaces\IChatControl.cs" />
-    <Compile Include="ControlInterfaces\IChatHistory.cs" />
-    <Compile Include="ControlInterfaces\IChatMessage.cs" />
-    <Compile Include="ControlInterfaces\IChatView.cs" />
-    <Compile Include="ControlInterfaces\IFullChatControl.cs" />
-    <Compile Include="ControlInterfaces\ITabFullChatControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Classes\MyChatServer.cs" />
   </ItemGroup>

@@ -1,6 +1,7 @@
-﻿namespace ChatLibrary.ControlInterfaces
+namespace WpfChatClient.Interfaces
 {
     public interface IFullChatControl
     {
+        
     }
 }
