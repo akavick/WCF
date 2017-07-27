@@ -13,7 +13,7 @@ namespace WpfChatClient.Classes
         public Button SendButton { get; }
         public TabItem TabItem { get; set; }
 
-        public event Action<IChatMessage> SendClick;
+        public event Action<object> SendClick;
 
         public ChatControl()
         {
@@ -27,7 +27,7 @@ namespace WpfChatClient.Classes
 
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            SendClick?.Invoke(sender, e);
+            //endClick?.Invoke(sender, e);
         }
 
         private TextRange GetChatText()

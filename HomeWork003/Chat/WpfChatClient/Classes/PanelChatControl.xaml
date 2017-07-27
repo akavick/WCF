@@ -1,0 +1,99 @@
+﻿<UserControl
+    x:Class="WpfChatClient.Classes.PanelChatControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    mc:Ignorable="d"
+    d:DesignHeight="600"
+    d:DesignWidth="600">
+    <Grid>
+        <Grid
+            Margin="0,0,0,40">
+            <Grid.Background>
+                <SolidColorBrush
+                    Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" />
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="4*" />
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="1*" />
+            </Grid.RowDefinitions>
+            <GridSplitter
+                Grid.Row="1"
+                Grid.Column="0"
+                Height="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center" />
+            <DockPanel
+                x:Name="_chatDockPanel"
+                x:FieldModifier="private"
+                Grid.Row="0"
+                LastChildFill="False">
+            </DockPanel>
+            <RichTextBox
+                x:Name="_messageRichTextBox"
+                x:FieldModifier="private"
+                Grid.Row="2" />
+        </Grid>
+        <Grid
+            Height="40"
+            VerticalAlignment="Bottom">
+
+            <xctk:ColorPicker
+                x:Name="_colorPicker"
+                Height="20"
+                Margin="10,10,0,10"
+                HorizontalAlignment="Left"
+                Width="100" />
+
+            <StackPanel
+                HorizontalAlignment="Left"
+                Height="50"
+                Margin="133,0,0,-10"
+                VerticalAlignment="Top"
+                Width="79">
+                <CheckBox
+                    x:Name="_checkboxItalic"
+                    Content="Italic" />
+                <CheckBox
+                    x:Name="_checkboxBold"
+                    Content="Bold" />
+                <CheckBox
+                    x:Name="_checkboxUnderline"
+                    Content="Underline" />
+            </StackPanel>
+
+            <Slider
+                x:Name="_sliderFontSize"
+                Minimum="1.0"
+                Maximum="100.0"
+                HorizontalAlignment="Left"
+                Width="121"
+                Margin="327,8,0,19"
+                RenderTransformOrigin="0.5,0.5">
+                <Slider.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform
+                            ScaleY="-1" />
+                        <SkewTransform />
+                        <RotateTransform />
+                        <TranslateTransform />
+                    </TransformGroup>
+                </Slider.RenderTransform>
+            </Slider>
+
+            <Button
+                x:Name="_sendMessageButton"
+                x:FieldModifier="private"
+                Content="Send"
+                Margin="0,2,2,2"
+                HorizontalAlignment="Right"
+                Width="66" />
+        </Grid>
+    </Grid>
+</UserControl>

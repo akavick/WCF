@@ -5,6 +5,6 @@ namespace WpfChatClient.Interfaces
 {
     public interface IChatControl
     {
-        event Action<IChatMessage> SendClick;
+        event Action<object> SendClick;
     }
 }
