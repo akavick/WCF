@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatLibrary", "ChatLibrary\ChatLibrary.csproj", "{6BA83F32-D139-40F6-BB07-9C72798081BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfChatClient", "WpfChatClient\WpfChatClient.csproj", "{52664D2D-AD43-4AF7-B7A1-3453C4D6BD9C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6BA83F32-D139-40F6-BB07-9C72798081BB} = {6BA83F32-D139-40F6-BB07-9C72798081BB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestStarter", "TestStarter\TestStarter.csproj", "{C6E573AD-EE1C-4502-9521-ED85F476A35E}"
 	ProjectSection(ProjectDependencies) = postProject

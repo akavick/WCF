@@ -11,17 +11,19 @@
     <system.serviceModel>
         <services>
             <service behaviorConfiguration="ServiceMainBehaviour" name="ChatLibrary.Classes.MyChatServer">
-                <endpoint address="Server" binding="netTcpBinding" name="ChatNetTcpBinding"
+                <endpoint address="Server" binding="wsDualHttpBinding" name="ChatWsDualHttpBinding"
                     contract="ChatLibrary.Interfaces.IChatContract">
                     <identity>
                         <dns value="localhost" />
                     </identity>
                 </endpoint>
-                <endpoint address="mex" binding="mexTcpBinding" name="ChatMexTcpBinding"
+                <endpoint address="mex" binding="mexHttpBinding" name="ChatMexHttpBinding"
                     contract="IMetadataExchange" />
+                <!--<endpoint address="net.tcp://localhost:8002/MyChat" binding="netTcpBinding"
+                    bindingConfiguration="" name="ChatNetTcpBinding" contract="ChatLibrary.Interfaces.IChatContract" />-->
                 <host>
                     <baseAddresses>
-                        <add baseAddress="net.tcp://localhost:8002/Chat/" />
+                        <add baseAddress="http://localhost/Temporary_Listen_Addresses/Chat/" />
                     </baseAddresses>
                 </host>
             </service>
@@ -29,8 +31,8 @@
         <behaviors>
             <serviceBehaviors>
                 <behavior name="ServiceMainBehaviour">
-                    <serviceMetadata httpGetEnabled="false"
-                                     httpsGetEnabled="false"/>
+                    <serviceMetadata httpGetEnabled="true"
+                                     httpsGetEnabled="true"/>
                     <serviceDebug includeExceptionDetailInFaults="true"/>
                 </behavior>
             </serviceBehaviors>

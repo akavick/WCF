@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="02cbbd6d-7878-4285-a46b-7a452e20e8f7" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="264a77ad-4e3d-4a09-b7c0-6f1c7ce1fcdf" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,13 +19,13 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost/Temporary_Listen_Addresses/Chat/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="net.tcp://localhost:8002/Chat/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="7ef2702d-389f-41ef-afa5-6997b8cdc2e7" SourceId="1" SourceUrl="http://localhost/Temporary_Listen_Addresses/Chat/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="880824b3-75d6-4765-8e21-73ac1e43b882" SourceId="1" SourceUrl="http://localhost/Temporary_Listen_Addresses/Chat/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="f47e3825-8b8c-4a8e-8348-296bc21fd7a6" SourceId="1" SourceUrl="http://localhost/Temporary_Listen_Addresses/Chat/mex" />
-    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="a4ac9c27-2247-4211-bb95-539be9a78f9c" SourceId="1" SourceUrl="http://localhost/Temporary_Listen_Addresses/Chat/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="6d7db26a-4156-4efa-85a1-16816e3c0248" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="9c8af487-2fd9-4e11-a004-094cfae46bcc" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="c78ff054-b3f7-4479-9c25-f71014946e0d" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="c13471bf-c69e-44ed-acea-f5a9be5d91ee" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
