@@ -7,14 +7,10 @@
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     mc:Ignorable="d"
     d:DesignHeight="600"
-    d:DesignWidth="600">
+    d:DesignWidth="800">
     <Grid>
         <Grid
             Margin="0,0,0,40">
-            <Grid.Background>
-                <SolidColorBrush
-                    Color="{DynamicResource {x:Static SystemColors.ControlColorKey}}" />
-            </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition
                     Height="4*" />
@@ -29,71 +25,56 @@
                 Height="3"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center" />
-            <DockPanel
-                x:Name="_chatDockPanel"
-                x:FieldModifier="private"
-                Grid.Row="0"
-                LastChildFill="False">
-            </DockPanel>
-            <RichTextBox
+
+            <Grid
+                Grid.Row="0">
+                <Border
+                    BorderThickness="1"
+                    BorderBrush="#FFABADB3">
+                    <ScrollViewer
+                        x:Name="_chatScrollViewer"
+                        BorderBrush="#FF5F9577">
+                        <DockPanel
+                            x:Name="_chatDockPanel"
+                            x:FieldModifier="private"
+                            LastChildFill="False"
+                            Background="#BFF3F3F3">
+                        </DockPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+
+            <xctk:RichTextBox
                 x:Name="_messageRichTextBox"
                 x:FieldModifier="private"
-                Grid.Row="2" />
+                AcceptsReturn="True"
+                AcceptsTab="True"
+                VerticalScrollBarVisibility="Visible"
+                IsInactiveSelectionHighlightEnabled="True"
+                FontSize="15"
+                Grid.Row="2"
+                SelectionBrush="#7F5081E8"
+                Background="#BFF3F3F3">
+                <xctk:RichTextBoxFormatBarManager.FormatBar>
+                    <xctk:RichTextBoxFormatBar
+                        x:Name="_richTextBoxFormatBar">
+                    </xctk:RichTextBoxFormatBar>
+                </xctk:RichTextBoxFormatBarManager.FormatBar>
+            </xctk:RichTextBox>
+
         </Grid>
         <Grid
             Height="40"
-            VerticalAlignment="Bottom">
-
-            <xctk:ColorPicker
-                x:Name="_colorPicker"
-                Height="20"
-                Margin="10,10,0,10"
-                HorizontalAlignment="Left"
-                Width="100" />
-
-            <StackPanel
-                HorizontalAlignment="Left"
-                Height="50"
-                Margin="133,0,0,-10"
-                VerticalAlignment="Top"
-                Width="79">
-                <CheckBox
-                    x:Name="_checkboxItalic"
-                    Content="Italic" />
-                <CheckBox
-                    x:Name="_checkboxBold"
-                    Content="Bold" />
-                <CheckBox
-                    x:Name="_checkboxUnderline"
-                    Content="Underline" />
-            </StackPanel>
-
-            <Slider
-                x:Name="_sliderFontSize"
-                Minimum="1.0"
-                Maximum="100.0"
-                HorizontalAlignment="Left"
-                Width="121"
-                Margin="327,8,0,19"
-                RenderTransformOrigin="0.5,0.5">
-                <Slider.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform
-                            ScaleY="-1" />
-                        <SkewTransform />
-                        <RotateTransform />
-                        <TranslateTransform />
-                    </TransformGroup>
-                </Slider.RenderTransform>
-            </Slider>
+            VerticalAlignment="Bottom"
+            Background="#BFF3F3F3">
 
             <Button
+                Width="auto"
+                Height="auto"
                 x:Name="_sendMessageButton"
                 x:FieldModifier="private"
                 Content="Send"
-                Margin="0,2,2,2"
-                HorizontalAlignment="Right"
-                Width="66" />
+                Margin="2,2,2,2" />
         </Grid>
     </Grid>
 </UserControl>

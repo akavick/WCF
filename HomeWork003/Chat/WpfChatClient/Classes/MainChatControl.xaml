@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WpfChatClient.Classes.FullChatControl"
+﻿<UserControl x:Class="WpfChatClient.Classes.MainChatControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -22,7 +22,7 @@
             Width="3"
             HorizontalAlignment="Center"
             VerticalAlignment="Stretch" />
-        <classes:ChatControl
+        <classes:PanelChatControl
             x:Name="_chatControl"
             x:FieldModifier="private"
             Grid.Column="0" />

@@ -4,16 +4,130 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:WpfChatClient.Classes"
     mc:Ignorable="d">
-    <Grid
-        Width="auto">
-        <FlowDocumentScrollViewer
-            VerticalScrollBarVisibility="Auto"
+
+    <Control.Resources>
+        <Style
+            x:Key="but">
+            <Setter
+                Property="Control.Width"
+                Value="auto" />
+            <Setter
+                Property="Control.VerticalContentAlignment"
+                Value="Center" />
+            <Setter
+                Property="Control.HorizontalContentAlignment"
+                Value="Center" />
+            <Setter
+                Property="Control.FontSize"
+                Value="8" />
+            <Setter
+                Property="Control.BorderThickness"
+                Value="0" />
+            <Setter
+                Property="Control.Padding"
+                Value="0" />
+            <Setter
+                Property="Control.Margin"
+                Value="0" />
+        </Style>
+    </Control.Resources>
+
+    <Border
+        BorderThickness="0,0,0,1"
+        BorderBrush="#FFE6E6E6"
+        Background="Transparent">
+
+        <Grid
+            x:Name="_grid"
             Width="auto"
-            Height="auto"
-            x:Name="_flowDocumentScrollViewer"
-            x:FieldModifier="private">
-        </FlowDocumentScrollViewer>
-    </Grid>
+            Height="auto">
+
+            <Grid
+                Background="Beige"
+                x:Name="_info"
+                Height="15"
+                VerticalAlignment="Top">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label
+                    x:Name="_dateTime"
+                    Padding="0"
+                    Margin="0"
+                    VerticalContentAlignment="Center"
+                    HorizontalContentAlignment="Left"
+                    Grid.Column="0"
+                    Width="auto"
+                    Foreground="#FF816060"
+                    FontSize="10" />
+                <Label
+                    x:Name="_who"
+                    Padding="0"
+                    Margin="0"
+                    VerticalContentAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Grid.Column="1"
+                    Width="auto"
+                    Foreground="#FF184622"
+                    FontWeight="Bold"
+                    FontSize="10" />
+            </Grid>
+
+            <Grid
+                Margin="10,25,0,10"
+                Width="auto"
+                Height="auto">
+                <FlowDocumentScrollViewer
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Auto"
+                    Width="auto"
+                    Height="auto"
+                    x:Name="_flowDocumentScrollViewer"
+                    x:FieldModifier="private"
+                    MinZoom="40"
+                    MaxZoom="1000">
+                </FlowDocumentScrollViewer>
+            </Grid>
+
+            <Grid
+                Visibility="Collapsed"
+                x:Name="_buttons"
+                Height="10"
+                VerticalAlignment="Bottom">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    x:Name="_butCollapse"
+                    Grid.Column="0"
+                    Content="⏶"
+                    Style="{StaticResource but}" />
+                <Button
+                    x:Name="_butMedify"
+                    Grid.Column="1"
+                    Content="◾"
+                    Style="{StaticResource but}" />
+                <Button
+                    x:Name="_butExpand"
+                    Grid.Column="2"
+                    Content="⏷"
+                    Style="{StaticResource but}" />
+            </Grid>
+        </Grid>
+    </Border>
 </UserControl>

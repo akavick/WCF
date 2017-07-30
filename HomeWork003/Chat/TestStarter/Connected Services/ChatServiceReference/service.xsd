@@ -5,7 +5,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="sender" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="message" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="message" nillable="true" type="xs:base64Binary" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -14,7 +14,7 @@
       <xs:sequence>
         <xs:element minOccurs="0" name="sender" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="reciever" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="message" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="message" nillable="true" type="xs:base64Binary" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -28,16 +28,17 @@
   <xs:element name="RefreshMainChat">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="message" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="message" nillable="true" type="xs:base64Binary" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="RefreshPersonalChat">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="message" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="finished" type="xs:boolean" />
+        <xs:element minOccurs="0" name="sender" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="reciever" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="message" nillable="true" type="xs:base64Binary" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

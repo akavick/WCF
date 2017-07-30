@@ -6,10 +6,10 @@ namespace ChatLibrary.Interfaces
     public interface IChatCallback
     {
         [OperationContract(IsOneWay = true)]
-        void RefreshMainChat(string message);
+        void RefreshMainChat(string name, byte[] message);
 
         [OperationContract(IsOneWay = true)]
-        void RefreshPersonalChat(string name, string message, bool finished = false);
+        void RefreshPersonalChat(string sender, string reciever, byte[] message);
 
         [OperationContract(IsOneWay = true)]
         void RefreshClientList(string name, bool quitted = false);

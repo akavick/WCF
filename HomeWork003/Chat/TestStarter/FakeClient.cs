@@ -1,4 +1,5 @@
 using System.ServiceModel;
+using System.Text;
 using TestStarter.ChatServiceReference;
 
 namespace TestStarter
@@ -22,10 +23,11 @@ namespace TestStarter
 
         #region NotUsed
 
-        public void RefreshMainChat(string message)
+        public void RefreshMainChat(string name, byte[] message)
         {
 
         }
+
 
         public void RefreshClientList(string name, bool quitted)
         {
@@ -39,9 +41,9 @@ namespace TestStarter
 
         #endregion
 
-        public void RefreshPersonalChat(string name, string message, bool finished)
+        public void RefreshPersonalChat(string sender, string reciever, byte[] message)
         {
-            Server.SendToPersonalChat(Name, name, "ответь");
+            Server.SendToPersonalChat(Name, sender, Encoding.UTF8.GetBytes("ответь"));
         }
     }
 }

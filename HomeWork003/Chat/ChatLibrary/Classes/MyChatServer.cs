@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.ServiceModel;
+using System.Text;
 using System.Threading.Tasks;
 using ChatLibrary.Interfaces;
 
@@ -41,34 +42,8 @@ namespace ChatLibrary.Classes
             }
         }
 
-        private static string GetFullMessage(IChatCallback sender, string message)
-        {
-            try
-            {
-                return $"{DateTime.Now.ToLongTimeString(),-10}{Clients.Single(c => c.Value == sender).Key + ":",-15}{message}";
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-        }
 
-
-        private static string GetFullMessage(string name, string message)
-        {
-            try
-            {
-                return $"{DateTime.Now.ToLongTimeString(),-10}{name + ":",-15}{message}";
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-        }
-
-        private static async Task SendMassMessage(IChatCallback sender, string message)
+        private static async Task SendMassMessage(string sender, byte[] message)
         {
             await Task.Run(() =>
             {
@@ -76,7 +51,7 @@ namespace ChatLibrary.Classes
                 {
                     try
                     {
-                        client.RefreshMainChat(message);
+                        client.RefreshMainChat(sender, message);
                     }
                     catch (Exception e)
                     {
@@ -89,6 +64,7 @@ namespace ChatLibrary.Classes
                         {
                             Console.WriteLine(ee.Message);
                         }
+
                     }
                 }
             });
@@ -110,17 +86,11 @@ namespace ChatLibrary.Classes
 
         #region IChatContract
 
-        public void MessageFromClientToMainChat(string sender, string message)
+        public void MessageFromClientToMainChat(string sender, byte[] message)
         {
             try
             {
-                if (string.IsNullOrEmpty(message))
-                    return;
-                var sen= GetCallback();
-                var msg = GetFullMessage(sender, message);
-                var task = SendMassMessage(sen, msg);
-
-
+                var task = SendMassMessage(sender, message);
             }
             catch (Exception e)
             {
@@ -129,19 +99,16 @@ namespace ChatLibrary.Classes
         }
 
 
-        public void MessageFromClientToPersonalChat(string sender, string reciever, string message)
+        public void MessageFromClientToPersonalChat(string sender, string reciever, byte[] message)
         {
             try
             {
-                if (string.IsNullOrEmpty(message))
-                    return;
-                var sen = GetCallback();
+                var sen = Clients[sender];
                 var rec = Clients[reciever];
-                var msg = GetFullMessage(sender, message);
-                rec.RefreshPersonalChat(sender, msg);
+                rec.RefreshPersonalChat(sender, sender, message);
                 if (reciever == sender)
                     return;
-                sen.RefreshPersonalChat(reciever, msg);
+                sen.RefreshPersonalChat(sender, reciever, message);
             }
             catch (Exception e)
             {
@@ -209,7 +176,8 @@ namespace ChatLibrary.Classes
                 }
 
                 var enterMessage = $"***** {name} входит в чат. *****";
-                MessageFromClientToMainChat(name, enterMessage);
+                var arr = Encoding.UTF8.GetBytes(enterMessage);
+                MessageFromClientToMainChat(name, arr);
             }
             catch (Exception e)
             {

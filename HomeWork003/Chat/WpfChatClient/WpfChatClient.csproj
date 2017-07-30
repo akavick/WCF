@@ -74,15 +74,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Classes\ChatControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Classes\FlowChatMessage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Classes\FullChatControl.xaml">
+    <Page Include="Classes\MainChatControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -90,7 +86,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Classes\TabFullChatControl.xaml">
+    <Page Include="Classes\TabChatControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -102,20 +98,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\ChatControl.xaml.cs">
-      <DependentUpon>ChatControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Classes\FlowChatMessage.xaml.cs">
       <DependentUpon>FlowChatMessage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\FullChatControl.xaml.cs">
-      <DependentUpon>FullChatControl.xaml</DependentUpon>
+    <Compile Include="Classes\MainChatControl.xaml.cs">
+      <DependentUpon>MainChatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\PanelChatControl.xaml.cs">
       <DependentUpon>PanelChatControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\TabFullChatControl.xaml.cs">
-      <DependentUpon>TabFullChatControl.xaml</DependentUpon>
+    <Compile Include="Classes\TabChatControl.xaml.cs">
+      <DependentUpon>TabChatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Connected Services\ChatServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -125,7 +118,7 @@
     <Compile Include="Interfaces\IChatControl.cs" />
     <Compile Include="Interfaces\IChatHistory.cs" />
     <Compile Include="Interfaces\IChat.cs" />
-    <Compile Include="Interfaces\IFullChatControl.cs" />
+    <Compile Include="Interfaces\IMainChatControl.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

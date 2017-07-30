@@ -16,16 +16,16 @@ namespace WpfChatClient.ChatServiceReference {
     public interface IChatContract {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToMainChat")]
-        void SendToMainChat(string sender, string message);
+        void SendToMainChat(string sender, byte[] message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToMainChat")]
-        System.Threading.Tasks.Task SendToMainChatAsync(string sender, string message);
+        System.Threading.Tasks.Task SendToMainChatAsync(string sender, byte[] message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToPersonalChat")]
-        void SendToPersonalChat(string sender, string reciever, string message);
+        void SendToPersonalChat(string sender, string reciever, byte[] message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/SendToPersonalChat")]
-        System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message);
+        System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, byte[] message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/IamIn")]
         void IamIn(string name);
@@ -38,10 +38,10 @@ namespace WpfChatClient.ChatServiceReference {
     public interface IChatContractCallback {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/RefreshMainChat")]
-        void RefreshMainChat(string message);
+        void RefreshMainChat(string name, byte[] message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/RefreshPersonalChat")]
-        void RefreshPersonalChat(string name, string message, bool finished);
+        void RefreshPersonalChat(string sender, string reciever, byte[] message);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatContract/RefreshClientList")]
         void RefreshClientList(string name, bool quitted);
@@ -78,19 +78,19 @@ namespace WpfChatClient.ChatServiceReference {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public void SendToMainChat(string sender, string message) {
+        public void SendToMainChat(string sender, byte[] message) {
             base.Channel.SendToMainChat(sender, message);
         }
         
-        public System.Threading.Tasks.Task SendToMainChatAsync(string sender, string message) {
+        public System.Threading.Tasks.Task SendToMainChatAsync(string sender, byte[] message) {
             return base.Channel.SendToMainChatAsync(sender, message);
         }
         
-        public void SendToPersonalChat(string sender, string reciever, string message) {
+        public void SendToPersonalChat(string sender, string reciever, byte[] message) {
             base.Channel.SendToPersonalChat(sender, reciever, message);
         }
         
-        public System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, string message) {
+        public System.Threading.Tasks.Task SendToPersonalChatAsync(string sender, string reciever, byte[] message) {
             return base.Channel.SendToPersonalChatAsync(sender, reciever, message);
         }
         

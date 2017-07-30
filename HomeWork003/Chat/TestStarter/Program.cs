@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace TestStarter
@@ -38,7 +39,7 @@ namespace TestStarter
                 {
                     await Task.Delay(random.Next(50, 5001));
                     var client = clients[random.Next(clients.Count)];
-                    client.Server.SendToMainChat(client.Name, "blah-blah");
+                    client.Server.SendToMainChat(client.Name, Encoding.UTF8.GetBytes("blah-blah"));
                 }
                 // ReSharper disable once FunctionNeverReturns
             });

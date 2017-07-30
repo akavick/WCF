@@ -11,102 +11,107 @@ using WpfChatClient.Interfaces;
 
 namespace WpfChatClient.Classes
 {
-    public partial class TabFullChatControl : IChatContractCallback, IChat
+    public partial class TabChatControl : IChatContractCallback, IChat
     {
         private readonly object _listLocker = new object();
         private readonly object _chatLocker = new object();
         private readonly ConcurrentDictionary<string, string> _histories = new ConcurrentDictionary<string, string>();
         private TabControl TalksTabControl { get; }
-        private FullChatControl MainChat { get; }
-        private HashSet<ChatControl> PrivateTalks { get; }
+        private IMainChatControl MainChat { get; }
+        private HashSet<IChatControl> PrivateTalks { get; }
 
 
         public string UserName { get; set; }
         public IChatContract Server { get; set; }
 
 
-        public TabFullChatControl()
+        public TabChatControl()
         {
             InitializeComponent();
             TalksTabControl = _talksTabControl;
-            PrivateTalks = new HashSet<ChatControl>();
+            PrivateTalks = new HashSet<IChatControl>();
             MainChat = _fullChatControl;
-            MainChat.TabItem = _mainChatTab;
 
-            MainChat.SendButton.Click += SendButton_Click;
+            MainChat.Tag = _mainChatTab;
+            MainChat.UserTryingToSendMessage += MainChat_UserTryingToSendMessage;
+
             MainChat.ClientsListBox.SelectionMode = SelectionMode.Single;
             MainChat.ClientsListBox.MouseDoubleClick += ClientsListBox_MouseDoubleClick;
-            GetChatText().Text = GetMessageText().Text = "";
+
             MainChat.ClientsCountLabel.Content = 0;
         }
 
-
-
-
-
-
-        private ChatControl GetOrCreateTab(string name)
+        private void MainChat_UserTryingToSendMessage(byte[] arr)
         {
             try
             {
-                var privateTalk = PrivateTalks.SingleOrDefault(t => t.TabItem.Header.ToString() == name);
+                if (arr == null || arr.Length == 0)
+                    return;
+                Server.SendToMainChat(UserName, arr);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        private IChatControl GetOrCreateTab(string name)
+        {
+            try
+            {
+                var privateTalk = PrivateTalks.SingleOrDefault(t => (t.Tag as TabItem)?.Header.ToString() == name);
                 if (privateTalk != null)
                     return privateTalk;
-                privateTalk = new ChatControl();
-                ClearChat(privateTalk);
-                if (_histories.ContainsKey(name))
-                    GetTextFromRichTextBox(privateTalk.ChatRichTextBox).Text = _histories[name];
+                privateTalk = new PanelChatControl();
 
-                void OnSendButtonOnClick(object sender, RoutedEventArgs eventArgs)
+                //if (_histories.ContainsKey(name))
+                //    GetTextFromRichTextBox(privateTalk.ChatRichTextBox).Text = _histories[name];
+
+                void OnUserTryingToSendMessage(byte[] arr)
                 {
-                    var rtfMessage = GetTextFromRichTextBox(privateTalk.MessageRichTextBox);
-                    var text = rtfMessage.Text;
-                    if (string.IsNullOrEmpty(text))
-                        return;
-                    rtfMessage.Text = "";
-                    Server.SendToPersonalChat(UserName, name, text);
+                    try
+                    {
+                        if (arr == null || arr.Length == 0)
+                            return;
+                        Server.SendToPersonalChat(UserName, name, arr);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.ToString());
+                    }
                 }
-                privateTalk.SendButton.Click += OnSendButtonOnClick;
+                privateTalk.UserTryingToSendMessage += OnUserTryingToSendMessage;
 
                 var tabItem = new TabItem { Header = name, Content = privateTalk };
 
                 void OnTabItemOnMouseDoubleClick(object sender, MouseButtonEventArgs eventArgs)
                 {
-                    var text = GetTextFromRichTextBox(privateTalk.ChatRichTextBox).Text;
-                    _histories.AddOrUpdate(name, text, (oldT, newT) => newT);
-                    PrivateTalks.Remove(privateTalk);
-                    TalksTabControl.Items.Remove(tabItem);
+                    try
+                    {
+                        //var text = GetTextFromRichTextBox(privateTalk.ChatRichTextBox).Text;
+                        //_histories.AddOrUpdate(name, text, (oldT, newT) => newT);
+
+                        PrivateTalks.Remove(privateTalk);
+                        TalksTabControl.Items.Remove(tabItem);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.ToString());
+                    }
                 }
                 tabItem.MouseDoubleClick += OnTabItemOnMouseDoubleClick;
 
-                privateTalk.TabItem = tabItem;
+                privateTalk.Tag = tabItem;
                 PrivateTalks.Add(privateTalk);
                 TalksTabControl.Items.Add(tabItem);
                 return privateTalk;
             }
             catch (Exception e)
             {
-                GetChatText().Text += e.ToString();
+                MessageBox.Show(e.ToString());
             }
             return null;
         }
-
-
-
-        private TextRange GetChatText()
-            => GetTextFromRichTextBox(MainChat.ChatRichTextBox);
-
-
-        private TextRange GetMessageText()
-            => GetTextFromRichTextBox(MainChat.MessageRichTextBox);
-
-
-        private TextRange GetTextFromRichTextBox(RichTextBox rtb)
-            => new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
-
-
-        private void ClearChat(ChatControl chat)
-            => GetTextFromRichTextBox(chat.MessageRichTextBox).Text = GetTextFromRichTextBox(chat.ChatRichTextBox).Text = "";
 
 
         private void ClientsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -117,61 +122,52 @@ namespace WpfChatClient.Classes
                 if (name == UserName)
                     return;
                 var chat = GetOrCreateTab(name);
-                TalksTabControl.SelectedItem = chat.TabItem;
+                TalksTabControl.SelectedItem = chat.Tag as TabItem;
             }
             catch (Exception exception)
             {
-                GetChatText().Text += exception.ToString();
+                MessageBox.Show(exception.ToString());
             }
         }
 
 
-        private void SendButton_Click(object sender, RoutedEventArgs e)
+
+
+        public void RefreshMainChat(string name, byte[] message)
         {
             try
             {
-                var rtfMessage = GetMessageText();
-                var text = rtfMessage.Text;
-                if (string.IsNullOrEmpty(text))
-                    return;
-                rtfMessage.Text = "";
-                Server.SendToMainChat(UserName, text);
-            }
-            catch (Exception exception)
-            {
-                GetChatText().Text += exception.ToString();
-            }
-        }
-
-
-        public void RefreshMainChat(string message)
-        {
-            lock (_chatLocker)
-            {
-                GetChatText().Text += message;
-            }
-        }
-
-
-        public void RefreshPersonalChat(string name, string message, bool talkFinished)
-        {
-            try
-            {
-                var talk = GetOrCreateTab(name);
-                GetTextFromRichTextBox(talk.ChatRichTextBox).Text += message;
+                lock (_chatLocker)
+                {
+                    MainChat.PushMessage(name, message);
+                }
             }
             catch (Exception e)
             {
-                GetChatText().Text += e.ToString();
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+
+        public void RefreshPersonalChat(string sender, string reciever, byte[] message)
+        {
+            try
+            {
+                var talk = GetOrCreateTab(reciever);
+                talk.PushMessage(sender, message);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
             }
         }
 
 
         public void RefreshClientList(string name, bool quitted = false)
         {
-            lock (_listLocker)
+            try
             {
-                try
+                lock (_listLocker)
                 {
                     if (quitted)
                         MainChat.ClientsListBox.Items.Remove(name);
@@ -189,19 +185,19 @@ namespace WpfChatClient.Classes
                         MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count.ToString();
                     }
                 }
-                catch (Exception e)
-                {
-                    GetChatText().Text += e.ToString();
-                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
             }
         }
 
 
         public void FullRefreshClientList(string[] names)
         {
-            lock (_listLocker)
+            try
             {
-                try
+                lock (_listLocker)
                 {
                     MainChat.ClientsListBox.Items.Clear();
                     names = names.Distinct().OrderBy(n => n).ToArray();
@@ -212,10 +208,10 @@ namespace WpfChatClient.Classes
                     }
                     MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count;
                 }
-                catch (Exception e)
-                {
-                    GetChatText().Text += e.ToString();
-                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
             }
         }
 
