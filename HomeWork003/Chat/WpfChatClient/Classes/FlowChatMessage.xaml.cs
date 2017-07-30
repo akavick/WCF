@@ -22,6 +22,9 @@ namespace WpfChatClient.Classes
 
             try
             {
+                document.PagePadding = new Thickness(0.0);
+                document.FontFamily = new FontFamily("Segoe Ui");
+                document.FontSize = 15.0;
                 _flowDocumentScrollViewer.Document = document;
                 _dateTime.Content = $"{time.ToLongDateString()} {time.ToLongTimeString()}";
                 _who.Content = name;

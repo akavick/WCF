@@ -132,9 +132,7 @@ namespace WpfChatClient.Classes
                 try
                 {
                     using (var stream = new MemoryStream(arr))
-                    {
                         document = XamlReader.Load(stream) as FlowDocument;
-                    }
 
                     if (document != null)
                         PushMessage(userName, document);
@@ -143,8 +141,7 @@ namespace WpfChatClient.Classes
                 {
                     document = new FlowDocument();
                     var message = Encoding.UTF8.GetString(arr);
-                    var range = new TextRange(document.ContentStart, document.ContentEnd);
-                    range.Text = message;
+                    var range = new TextRange(document.ContentStart, document.ContentEnd) {Text = message};
                     PushMessage(userName, document);
                 }
             }
