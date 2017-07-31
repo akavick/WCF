@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -13,9 +14,9 @@ namespace WpfChatClient.Classes
     public partial class PanelChatControl : IChatControl
     {
         private bool _clientNowScrolling;
-        //private object _locker = new object();
+        private object _locker = new object();
 
-        public event Action<byte[]> UserTryingToSendMessage;
+        public event Func<byte[], Task> UserTryingToSendMessage;
 
         public PanelChatControl()
         {
@@ -37,7 +38,9 @@ namespace WpfChatClient.Classes
         }
 
         private TextRange GetMessageText()
-            => new TextRange(_messageRichTextBox.Document.ContentStart, _messageRichTextBox.Document.ContentEnd);
+        {
+            return new TextRange(_messageRichTextBox.Document.ContentStart, _messageRichTextBox.Document.ContentEnd);
+        }
 
 
         private void _messageRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -152,29 +155,40 @@ namespace WpfChatClient.Classes
         }
 
 
-        private void Work()
+        private async Task Work()
         {
             try
             {
                 if (GetMessageText().IsEmpty)
                     return;
 
+                _sendMessageButton.IsEnabled = false;
+
                 var flowDocument = _messageRichTextBox.Document;
                 _messageRichTextBox.Document = new FlowDocument();
-                byte[] arr;
+                byte[] arr = null;
 
-                using (var stream = new MemoryStream())
+                await Dispatcher.InvokeAsync(() =>
                 {
-                    if (flowDocument != null)
-                        XamlWriter.Save(flowDocument, stream);
-                    arr = stream.ToArray();
-                }
+                    using (var stream = new MemoryStream())
+                    {
+                        if (flowDocument != null)
+                            XamlWriter.Save(flowDocument, stream);
+                        arr = stream.ToArray();
+                    }
+                });
 
-                UserTryingToSendMessage?.Invoke(arr);
+                var task = UserTryingToSendMessage?.Invoke(arr);
+                if (task != null)
+                    await task;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                _sendMessageButton.IsEnabled = true;
             }
         }
 

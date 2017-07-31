@@ -66,46 +66,49 @@ namespace WpfChatClient.Classes
                     MessageBox.Show(ex.ToString());
                 }
             };
-            Loaded += (s, e) =>
+            Loaded += async (s, e) =>
             {
-                try
+                await await Dispatcher.InvokeAsync(async () =>
                 {
-                    _grid.Height = _grid.ActualHeight > MediHeight ? MediHeight : double.NaN;
-                    _grid.Dispatcher.Invoke(() => { }, DispatcherPriority.Render);
-
-                    var width = ToolTipImageWidth;
-                    var height = ToolTipImageHeight;
-                    var renderTargetBitmap = new RenderTargetBitmap(width, height, Dpi, Dpi, PixelFormats.Default);
-                    renderTargetBitmap.Render(_flowDocumentScrollViewer);
-                    var pngImage = new PngBitmapEncoder();
-                    pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
-
-                    var bitmapImage = new BitmapImage();
-                    using (var stream = new MemoryStream())
+                    try
                     {
-                        pngImage.Save(stream);
-                        renderTargetBitmap = null;
-                        pngImage = null;
-                        bitmapImage.BeginInit();
-                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmapImage.StreamSource = stream;
-                        bitmapImage.EndInit();
-                        bitmapImage.StreamSource = null;
-                        bitmapImage.Freeze();
+                        _grid.Height = _grid.ActualHeight > MediHeight ? MediHeight : double.NaN;
+                        await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
+
+                        var width = ToolTipImageWidth;
+                        var height = ToolTipImageHeight;
+                        var renderTargetBitmap = new RenderTargetBitmap(width, height, Dpi, Dpi, PixelFormats.Default);
+                        renderTargetBitmap.Render(_flowDocumentScrollViewer);
+                        var pngImage = new PngBitmapEncoder();
+                        pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+                        var bitmapImage = new BitmapImage();
+                        using (var stream = new MemoryStream())
+                        {
+                            pngImage.Save(stream);
+                            renderTargetBitmap = null;
+                            pngImage = null;
+                            bitmapImage.BeginInit();
+                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmapImage.StreamSource = stream;
+                            bitmapImage.EndInit();
+                            bitmapImage.StreamSource = null;
+                            bitmapImage.Freeze();
+                        }
+
+                        ToolTip = new Image
+                        {
+                            Source = bitmapImage,
+                            Width = width / 2.0,
+                            Height = height / 2.0
+                        };
+                        ToolTipService.SetInitialShowDelay(this, 500);
                     }
-
-                    ToolTip = new Image
+                    catch (Exception ex)
                     {
-                        Source = bitmapImage,
-                        Width = width / 2.0,
-                        Height = height / 2.0
-                    };
-                    ToolTipService.SetInitialShowDelay(this, 500);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
+                        MessageBox.Show(ex.ToString());
+                    }
+                });
             };
         }
     }

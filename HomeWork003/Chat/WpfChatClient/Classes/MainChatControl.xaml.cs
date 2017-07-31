@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -11,7 +12,7 @@ namespace WpfChatClient.Classes
         public ListBox ClientsListBox { get; }
         public Label ClientsCountLabel { get; set; }
 
-        public event Action<byte[]> UserTryingToSendMessage;
+        public event Func<byte[], Task> UserTryingToSendMessage;
 
         private readonly IChatControl _chat;
 
@@ -25,11 +26,13 @@ namespace WpfChatClient.Classes
             _chat.UserTryingToSendMessage += _chat_UserTryingToSendMessage;
         }
 
-        private void _chat_UserTryingToSendMessage(byte[] arr)
+        private async Task _chat_UserTryingToSendMessage(byte[] arr)
         {
             try
             {
-                UserTryingToSendMessage?.Invoke(arr);
+                var task = UserTryingToSendMessage?.Invoke(arr);
+                if (task != null)
+                    await task;
             }
             catch (Exception e)
             {
