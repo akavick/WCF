@@ -18,10 +18,9 @@ namespace WpfChatClient.Classes
 
         public FlowChatMessage(FlowDocument document, string name, DateTime time)
         {
-            InitializeComponent();
-
             try
             {
+                InitializeComponent();
                 document.PagePadding = new Thickness(0.0);
                 document.FontFamily = new FontFamily("Segoe Ui");
                 document.FontSize = 15.0;
@@ -34,17 +33,70 @@ namespace WpfChatClient.Classes
                 MessageBox.Show(ex.ToString());
             }
 
-            MouseEnter += (s, e) => _buttons.Visibility = Visibility.Visible;
-            MouseLeave += (s, e) => _buttons.Visibility = Visibility.Collapsed;
-            _butCollapse.Click += (s, e) => _grid.Height = _info.Height + _buttons.Height;
-            _butExpand.Click += (s, e) => _grid.Height = double.NaN;
-            _butMedify.Click += (s, e) =>
+            MouseEnter += (s, e) =>
             {
                 try
                 {
+                    _buttons.Visibility = Visibility.Visible;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            };
+
+            MouseLeave += (s, e) =>
+            {
+                try
+                {
+                    _buttons.Visibility = Visibility.Collapsed;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            };
+
+            _butCollapse.Click += (s, e) =>
+            {
+                try
+                {
+                    _butCollapse.IsEnabled = false;
+                    _butExpand.IsEnabled = true;
+                    _butMedify.IsEnabled = true;
+                    _grid.Height = _info.Height + _buttons.Height;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            };
+
+            _butExpand.Click += (s, e) =>
+            {
+                try
+                {
+                    _butCollapse.IsEnabled = true;
+                    _butExpand.IsEnabled = false;
+                    _butMedify.IsEnabled = true;
+                    _grid.Height = double.NaN;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            };
+
+            _butMedify.Click += async (s, e) =>
+            {
+                try
+                {
+                    _butCollapse.IsEnabled = true;
+                    _butExpand.IsEnabled = true;
+                    _butMedify.IsEnabled = false;
                     Visibility = Visibility.Hidden;
                     _grid.Height = double.NaN;
-                    _grid.Dispatcher.Invoke(() => { }, DispatcherPriority.Render);
+                    await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
                     if (_grid.ActualHeight > MediHeight)
                         _grid.Height = MediHeight;
                     Visibility = Visibility.Visible;
@@ -54,6 +106,7 @@ namespace WpfChatClient.Classes
                     MessageBox.Show(ex.ToString());
                 }
             };
+
             ToolTipOpening += (s, e) =>
             {
                 try
@@ -66,49 +119,45 @@ namespace WpfChatClient.Classes
                     MessageBox.Show(ex.ToString());
                 }
             };
+
             Loaded += async (s, e) =>
             {
-                await await Dispatcher.InvokeAsync(async () =>
+                try
                 {
-                    try
+                    await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
+                    _grid.Height = _grid.ActualHeight > MediHeight ? MediHeight : double.NaN;
+
+                    var renderTargetBitmap = new RenderTargetBitmap(ToolTipImageWidth, ToolTipImageHeight, Dpi, Dpi, PixelFormats.Default);
+                    renderTargetBitmap.Render(_flowDocumentScrollViewer);
+                    var pngImage = new PngBitmapEncoder();
+                    pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+                    var bitmapImage = new BitmapImage();
+                    using (var stream = new MemoryStream())
                     {
-                        _grid.Height = _grid.ActualHeight > MediHeight ? MediHeight : double.NaN;
-                        await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
-
-                        var width = ToolTipImageWidth;
-                        var height = ToolTipImageHeight;
-                        var renderTargetBitmap = new RenderTargetBitmap(width, height, Dpi, Dpi, PixelFormats.Default);
-                        renderTargetBitmap.Render(_flowDocumentScrollViewer);
-                        var pngImage = new PngBitmapEncoder();
-                        pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
-
-                        var bitmapImage = new BitmapImage();
-                        using (var stream = new MemoryStream())
-                        {
-                            pngImage.Save(stream);
-                            renderTargetBitmap = null;
-                            pngImage = null;
-                            bitmapImage.BeginInit();
-                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmapImage.StreamSource = stream;
-                            bitmapImage.EndInit();
-                            bitmapImage.StreamSource = null;
-                            bitmapImage.Freeze();
-                        }
-
-                        ToolTip = new Image
-                        {
-                            Source = bitmapImage,
-                            Width = width / 2.0,
-                            Height = height / 2.0
-                        };
-                        ToolTipService.SetInitialShowDelay(this, 500);
+                        pngImage.Save(stream);
+                        renderTargetBitmap = null;
+                        pngImage = null;
+                        bitmapImage.BeginInit();
+                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmapImage.StreamSource = stream;
+                        bitmapImage.EndInit();
+                        bitmapImage.StreamSource = null;
+                        bitmapImage.Freeze();
                     }
-                    catch (Exception ex)
+
+                    ToolTip = new Image
                     {
-                        MessageBox.Show(ex.ToString());
-                    }
-                });
+                        Source = bitmapImage,
+                        Width = ToolTipImageWidth / 2.0,
+                        Height = ToolTipImageHeight / 2.0
+                    };
+                    ToolTipService.SetInitialShowDelay(this, 500);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
             };
         }
     }

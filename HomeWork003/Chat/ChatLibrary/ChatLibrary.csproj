@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App" />
-    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

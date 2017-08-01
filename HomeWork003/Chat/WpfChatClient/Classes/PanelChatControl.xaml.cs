@@ -23,7 +23,7 @@ namespace WpfChatClient.Classes
             InitializeComponent();
             try
             {
-                GetMessageText().Text = "";
+                GetMessageText().Result.Text = "";
             }
             catch (Exception ex)
             {
@@ -37,14 +37,17 @@ namespace WpfChatClient.Classes
             _messageRichTextBox.PreviewKeyDown += _messageRichTextBox_PreviewKeyDown;
         }
 
-        private TextRange GetMessageText()
+        private async Task<TextRange> GetMessageText()
         {
+            await Task.Yield();
             return new TextRange(_messageRichTextBox.Document.ContentStart, _messageRichTextBox.Document.ContentEnd);
         }
 
 
-        private void _messageRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        private async void _messageRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            await Task.Yield();
+
             try
             {
                 switch (e.Key)
@@ -59,7 +62,7 @@ namespace WpfChatClient.Classes
                         if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
                             _messageRichTextBox.CaretPosition.InsertLineBreak();
                         else
-                            Work();
+                            await Work();
                         e.Handled = true;
                         break;
                     }
@@ -71,14 +74,19 @@ namespace WpfChatClient.Classes
             }
         }
 
-        private void _chatScrollViewer_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-            => DockBottomScroll();
+        private async void _chatScrollViewer_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+            => await DockBottomScroll();
 
-        private void _chatScrollViewer_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-            => _clientNowScrolling = true;
-
-        private void _chatScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private async void _chatScrollViewer_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            await Task.Yield();
+            _clientNowScrolling = true;
+        }
+
+        private async void _chatScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            await Task.Yield();
+
             try
             {
                 _clientNowScrolling = true;
@@ -90,11 +98,13 @@ namespace WpfChatClient.Classes
             }
         }
 
-        private void _chatScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
-            => DockBottomScroll();
+        private async void _chatScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+            => await DockBottomScroll();
 
-        private void DockBottomScroll()
+        private async Task DockBottomScroll()
         {
+            await Task.Yield();
+
             try
             {
                 if (Math.Abs(_chatScrollViewer.VerticalOffset - _chatScrollViewer.ScrollableHeight) > 10.0)
@@ -109,8 +119,10 @@ namespace WpfChatClient.Classes
         }
 
 
-        public void PushMessage(string userName, FlowDocument doc)
+        public async void PushMessage(string userName, FlowDocument doc)
         {
+            await Task.Yield();
+
             try
             {
                 var flowChatMessage = new FlowChatMessage(doc, userName, DateTime.Now);
@@ -127,8 +139,10 @@ namespace WpfChatClient.Classes
         }
 
 
-        public void PushMessage(string userName, byte[] arr)
+        public async void PushMessage(string userName, byte[] arr)
         {
+            await Task.Yield();
+
             try
             {
                 FlowDocument document;
@@ -144,7 +158,7 @@ namespace WpfChatClient.Classes
                 {
                     document = new FlowDocument();
                     var message = Encoding.UTF8.GetString(arr);
-                    var range = new TextRange(document.ContentStart, document.ContentEnd) {Text = message};
+                    var range = new TextRange(document.ContentStart, document.ContentEnd) { Text = message };
                     PushMessage(userName, document);
                 }
             }
@@ -157,9 +171,11 @@ namespace WpfChatClient.Classes
 
         private async Task Work()
         {
+            await Task.Yield();
+
             try
             {
-                if (GetMessageText().IsEmpty)
+                if ((await GetMessageText()).IsEmpty)
                     return;
 
                 _sendMessageButton.IsEnabled = false;
@@ -168,15 +184,12 @@ namespace WpfChatClient.Classes
                 _messageRichTextBox.Document = new FlowDocument();
                 byte[] arr = null;
 
-                await Dispatcher.InvokeAsync(() =>
+                using (var stream = new MemoryStream())
                 {
-                    using (var stream = new MemoryStream())
-                    {
-                        if (flowDocument != null)
-                            XamlWriter.Save(flowDocument, stream);
-                        arr = stream.ToArray();
-                    }
-                });
+                    if (flowDocument != null)
+                        XamlWriter.Save(flowDocument, stream);
+                    arr = stream.ToArray();
+                }
 
                 var task = UserTryingToSendMessage?.Invoke(arr);
                 if (task != null)
@@ -193,9 +206,10 @@ namespace WpfChatClient.Classes
         }
 
 
-        private void SendButton_Click(object sender, RoutedEventArgs e)
+        private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            Work();
+            await Task.Yield();
+            await Work();
         }
 
     }

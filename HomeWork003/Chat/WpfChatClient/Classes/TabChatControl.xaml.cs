@@ -302,26 +302,25 @@ namespace WpfChatClient.Classes
 
         private async Task MainChat_UserTryingToSendMessage(byte[] arr)
         {
-            await Task.Run(async () =>
+            await Task.Yield();
+
+            try
             {
-                try
-                {
-                    if (arr == null || arr.Length == 0)
-                        return;
-                    await Server.SendToMainChatAsync(UserName, arr);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.ToString());
-                }
-            });
+                if (arr == null || arr.Length == 0)
+                    return;
+                await Server.SendToMainChatAsync(UserName, arr);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
         private IChatControl GetOrCreateTab(string name)
         {
             try
             {
-                var privateTalk = PrivateTalks.SingleOrDefault(t => (t.Tag as TabItem)?.Header.ToString() == name);
+                var privateTalk = PrivateTalks.SingleOrDefault(t => ((t.Tag as TabItem)?.Header as PrivateTalkTabHeader)?.TabName.ToString() == name);
                 if (privateTalk != null)
                     return privateTalk;
                 privateTalk = new PanelChatControl();
@@ -344,9 +343,9 @@ namespace WpfChatClient.Classes
                 }
                 privateTalk.UserTryingToSendMessage += OnUserTryingToSendMessage;
 
-                var tabItem = new TabItem { Header = name, Content = privateTalk };
-
-                void OnTabItemOnMouseDoubleClick(object sender, MouseButtonEventArgs eventArgs)
+                var header = new PrivateTalkTabHeader { TabName = name };
+                var tabItem = new TabItem { Header = header, Content = privateTalk };
+                header.CloseButtonPressed += () =>
                 {
                     try
                     {
@@ -360,8 +359,7 @@ namespace WpfChatClient.Classes
                     {
                         MessageBox.Show(e.ToString());
                     }
-                }
-                tabItem.MouseDoubleClick += OnTabItemOnMouseDoubleClick;
+                };
 
                 privateTalk.Tag = tabItem;
                 PrivateTalks.Add(privateTalk);
@@ -376,8 +374,10 @@ namespace WpfChatClient.Classes
         }
 
 
-        private void ClientsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void ClientsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            await Task.Yield();
+
             try
             {
                 var name = MainChat.ClientsListBox.SelectedItem.ToString();
@@ -397,20 +397,19 @@ namespace WpfChatClient.Classes
 
         public async void RefreshMainChat(string name, byte[] message)
         {
-            await Dispatcher.InvokeAsync(() =>
+            await Task.Yield();
+
+            try
             {
-                try
+                lock (_chatLocker)
                 {
-                    lock (_chatLocker)
-                    {
-                        MainChat.PushMessage(name, message);
-                    }
+                    MainChat.PushMessage(name, message);
                 }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.ToString());
-                }
-            });
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
 
@@ -418,77 +417,72 @@ namespace WpfChatClient.Classes
         {
             await Task.Yield();
 
-            await Dispatcher.InvokeAsync(() =>
+            try
             {
-                try
-                {
-                    var talk = GetOrCreateTab(reciever);
-                    talk.PushMessage(sender, message);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.ToString());
-                }
-            });
+                var talk = GetOrCreateTab(reciever);
+                talk.PushMessage(sender, message);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
 
         public async void RefreshClientList(string name, bool quitted = false)
         {
-            await Dispatcher.InvokeAsync(() =>
+            await Task.Yield();
+
+            try
             {
-                try
+                lock (_listLocker)
                 {
-                    lock (_listLocker)
+                    if (quitted)
+                        MainChat.ClientsListBox.Items.Remove(name);
+                    else
                     {
-                        if (quitted)
-                            MainChat.ClientsListBox.Items.Remove(name);
-                        else
+                        var tempList = new SortedSet<string>(MainChat.ClientsListBox.Items.Cast<string>());
+                        if (!tempList.Contains(name))
+                            tempList.Add(name);
+                        MainChat.ClientsListBox.Items.Clear();
+                        foreach (var element in tempList)
                         {
-                            var tempList = new SortedSet<string>(MainChat.ClientsListBox.Items.Cast<string>());
-                            if (!tempList.Contains(name))
-                                tempList.Add(name);
-                            MainChat.ClientsListBox.Items.Clear();
-                            foreach (var element in tempList)
-                            {
-                                if (element != UserName)
-                                    MainChat.ClientsListBox.Items.Add(element);
-                            }
-                            MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count.ToString();
+                            if (element != UserName)
+                                MainChat.ClientsListBox.Items.Add(element);
                         }
+                        MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count;
                     }
                 }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.ToString());
-                }
-            });
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
 
         public async void FullRefreshClientList(string[] names)
         {
-            await Dispatcher.InvokeAsync(() =>
+            await Task.Yield();
+
+            try
             {
-                try
+                lock (_listLocker)
                 {
-                    lock (_listLocker)
+                    MainChat.ClientsListBox.Items.Clear();
+                    names = names.Distinct().OrderBy(n => n).ToArray();
+                    foreach (var name in names)
                     {
-                        MainChat.ClientsListBox.Items.Clear();
-                        names = names.Distinct().OrderBy(n => n).ToArray();
-                        foreach (var name in names)
-                        {
-                            if (name != UserName)
-                                MainChat.ClientsListBox.Items.Add(name);
-                        }
-                        MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count;
+                        if (name != UserName)
+                            MainChat.ClientsListBox.Items.Add(name);
                     }
+                    MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count;
                 }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.ToString());
-                }
-            });
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
 

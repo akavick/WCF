@@ -86,6 +86,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Classes\PrivateTalkTabHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Classes\TabChatControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -106,6 +110,9 @@
     </Compile>
     <Compile Include="Classes\PanelChatControl.xaml.cs">
       <DependentUpon>PanelChatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\PrivateTalkTabHeader.xaml.cs">
+      <DependentUpon>PrivateTalkTabHeader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Classes\TabChatControl.xaml.cs">
       <DependentUpon>TabChatControl.xaml</DependentUpon>
