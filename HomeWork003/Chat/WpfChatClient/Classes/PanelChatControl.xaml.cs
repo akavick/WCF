@@ -23,7 +23,7 @@ namespace WpfChatClient.Classes
             InitializeComponent();
             try
             {
-                GetMessageText().Result.Text = "";
+                GetMessageText().Text = "";
             }
             catch (Exception ex)
             {
@@ -37,16 +37,14 @@ namespace WpfChatClient.Classes
             _messageRichTextBox.PreviewKeyDown += _messageRichTextBox_PreviewKeyDown;
         }
 
-        private async Task<TextRange> GetMessageText()
+        private TextRange GetMessageText()
         {
-            //await Task.Yield();
             return new TextRange(_messageRichTextBox.Document.ContentStart, _messageRichTextBox.Document.ContentEnd);
         }
 
 
-        private async void _messageRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void _messageRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            //await Task.Yield();
 
             try
             {
@@ -62,7 +60,7 @@ namespace WpfChatClient.Classes
                         if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
                             _messageRichTextBox.CaretPosition.InsertLineBreak();
                         else
-                            await Work();
+                            Work();
                         e.Handled = true;
                         break;
                     }
@@ -74,19 +72,18 @@ namespace WpfChatClient.Classes
             }
         }
 
-        private async void _chatScrollViewer_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-            => await DockBottomScroll();
-
-        private async void _chatScrollViewer_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void _chatScrollViewer_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            //await Task.Yield();
+            DockBottomScroll();
+        }
+
+        private void _chatScrollViewer_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
             _clientNowScrolling = true;
         }
 
-        private async void _chatScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void _chatScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            //await Task.Yield();
-
             try
             {
                 _clientNowScrolling = true;
@@ -98,13 +95,13 @@ namespace WpfChatClient.Classes
             }
         }
 
-        private async void _chatScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
-            => await DockBottomScroll();
-
-        private async Task DockBottomScroll()
+        private void _chatScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            //await Task.Yield();
+            DockBottomScroll();
+        }
 
+        private void DockBottomScroll()
+        {
             try
             {
                 if (Math.Abs(_chatScrollViewer.VerticalOffset - _chatScrollViewer.ScrollableHeight) > 10.0)
@@ -119,97 +116,98 @@ namespace WpfChatClient.Classes
         }
 
 
-        public async void PushMessage(string userName, FlowDocument doc)
+        public void PushMessage(string userName, FlowDocument doc)
         {
-            //await Task.Yield();
-
-            try
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (Action)(() =>
             {
-                var flowChatMessage = new FlowChatMessage(doc, userName, DateTime.Now);
-                DockPanel.SetDock(flowChatMessage, Dock.Top);
-                _chatDockPanel.Children.Add(flowChatMessage);
-
-                if (!_clientNowScrolling)
-                    _chatScrollViewer.ScrollToEnd();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-
-
-        public async void PushMessage(string userName, byte[] arr)
-        {
-            //await Task.Yield();
-
-            try
-            {
-                FlowDocument document;
                 try
                 {
-                    using (var stream = new MemoryStream(arr))
-                        document = XamlReader.Load(stream) as FlowDocument;
+                    var flowChatMessage = new FlowChatMessage(doc, userName, DateTime.Now);
+                    DockPanel.SetDock(flowChatMessage, Dock.Top);
+                    _chatDockPanel.Children.Add(flowChatMessage);
 
-                    if (document != null)
+                    if (!_clientNowScrolling)
+                        _chatScrollViewer.ScrollToEnd();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }));
+        }
+
+
+        public void PushMessage(string userName, byte[] arr)
+        {
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (Action)(() =>
+            {
+                try
+                {
+                    FlowDocument document = null;
+                    try
+                    {
+                        using (var stream = new MemoryStream(arr))
+                            document = XamlReader.Load(stream) as FlowDocument;
+
+                        if (document != null)
+                            PushMessage(userName, document);
+                    }
+                    catch (XamlParseException)
+                    {
+                        document = new FlowDocument();
+                        var message = Encoding.UTF8.GetString(arr);
+                        var range = new TextRange(document.ContentStart, document.ContentEnd) { Text = message };
                         PushMessage(userName, document);
+                    }
                 }
-                catch (XamlParseException)
+                catch (Exception ex)
                 {
-                    document = new FlowDocument();
-                    var message = Encoding.UTF8.GetString(arr);
-                    var range = new TextRange(document.ContentStart, document.ContentEnd) { Text = message };
-                    PushMessage(userName, document);
+                    MessageBox.Show(ex.ToString());
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            }));
         }
 
 
-        private async Task Work()
+        private void Work()
         {
-            //await Task.Yield();
-
-            try
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (Action)(() =>
             {
-                if ((await GetMessageText()).IsEmpty)
-                    return;
-
-                _sendMessageButton.IsEnabled = false;
-
-                var flowDocument = _messageRichTextBox.Document;
-                _messageRichTextBox.Document = new FlowDocument();
-                byte[] arr = null;
-
-                using (var stream = new MemoryStream())
+                try
                 {
-                    if (flowDocument != null)
-                        XamlWriter.Save(flowDocument, stream);
-                    arr = stream.ToArray();
-                }
+                    if (GetMessageText().IsEmpty)
+                        return;
 
-                var task = UserTryingToSendMessage?.Invoke(arr);
-                if (task != null)
-                    await task;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            finally
-            {
-                _sendMessageButton.IsEnabled = true;
-            }
+                    _sendMessageButton.IsEnabled = false;
+
+                    var flowDocument = _messageRichTextBox.Document;
+                    _messageRichTextBox.Document = new FlowDocument();
+                    byte[] arr = null;
+
+                    using (var stream = new MemoryStream())
+                    {
+                        if (flowDocument != null)
+                            XamlWriter.Save(flowDocument, stream);
+                        arr = stream.ToArray();
+                    }
+
+                    UserTryingToSendMessage?.Invoke(arr);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+                finally
+                {
+                    _sendMessageButton.IsEnabled = true;
+                }
+            }));
         }
 
 
-        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        private void SendButton_Click(object sender, RoutedEventArgs e)
         {
             //await Task.Yield();
-            await Work();
+            Work();
         }
 
     }

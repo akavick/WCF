@@ -26,11 +26,10 @@ namespace WpfChatClient.Classes
         private const int ToolTipImageHeight = 100;
         private const double Dpi = 96.0;
 
-        public FlowChatMessage(FlowDocument document, string name, DateTime time)
+        private void Initialize(FlowDocument document, string name, DateTime time)
         {
             try
             {
-                InitializeComponent();
                 document.PagePadding = new Thickness(0.0);
                 document.FontFamily = new FontFamily("Segoe Ui");
                 document.FontSize = 15.0;
@@ -42,95 +41,60 @@ namespace WpfChatClient.Classes
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
 
-            MouseEnter += (s, e) =>
+        public FlowChatMessage(FlowDocument document, string name, DateTime time)
+        {
+            try
             {
-                try
-                {
-                    _buttons.Visibility = Visibility.Visible;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-            };
+                InitializeComponent();
+                Initialize(document, name, time);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
 
-            MouseLeave += (s, e) =>
-            {
-                try
-                {
-                    _buttons.Visibility = Visibility.Collapsed;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-            };
+            MouseEnter += (s, e) => _buttons.Visibility = Visibility.Visible;
+
+            MouseLeave += (s, e) => _buttons.Visibility = Visibility.Collapsed;
 
             _butCollapse.Click += (s, e) =>
             {
-                try
-                {
-                    _butCollapse.IsEnabled = false;
-                    _butExpand.IsEnabled = true;
-                    _butMedify.IsEnabled = true;
-                    _currentState = State.Collapsed;
-                    _grid.Height = _info.Height + _buttons.Height;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
+                _butCollapse.IsEnabled = false;
+                _butExpand.IsEnabled = true;
+                _butMedify.IsEnabled = true;
+                _currentState = State.Collapsed;
+                _grid.Height = _info.Height + _buttons.Height;
             };
 
             _butExpand.Click += (s, e) =>
             {
-                try
-                {
-                    _butCollapse.IsEnabled = true;
-                    _butExpand.IsEnabled = false;
-                    _butMedify.IsEnabled = true;
-                    _currentState = State.Expanded;
-                    _grid.Height = double.NaN;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
+                _butCollapse.IsEnabled = true;
+                _butExpand.IsEnabled = false;
+                _butMedify.IsEnabled = true;
+                _currentState = State.Expanded;
+                _grid.Height = double.NaN;
             };
 
             _butMedify.Click += async (s, e) =>
             {
-                try
-                {
-                    _butCollapse.IsEnabled = true;
-                    _butExpand.IsEnabled = true;
-                    _butMedify.IsEnabled = false;
-                    _currentState = State.Medified;
-                    Visibility = Visibility.Hidden;
-                    _grid.Height = double.NaN;
-                    await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
-                    if (_grid.ActualHeight > MediHeight)
-                        _grid.Height = MediHeight;
-                    Visibility = Visibility.Visible;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
+                _butCollapse.IsEnabled = true;
+                _butExpand.IsEnabled = true;
+                _butMedify.IsEnabled = false;
+                _currentState = State.Medified;
+                Visibility = Visibility.Hidden;
+                _grid.Height = double.NaN;
+                await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
+                if (_grid.ActualHeight > MediHeight)
+                    _grid.Height = MediHeight;
+                Visibility = Visibility.Visible;
             };
 
             ToolTipOpening += (s, e) =>
             {
-                try
-                {
-                    if (double.IsNaN(_grid.Height) || _grid.Height > _info.Height + _buttons.Height)
-                        e.Handled = true;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
+                if (double.IsNaN(_grid.Height) || _grid.Height > _info.Height + _buttons.Height)
+                    e.Handled = true;
             };
 
             Loaded += async (s, e) =>
