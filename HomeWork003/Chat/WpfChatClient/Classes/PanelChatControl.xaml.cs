@@ -39,14 +39,14 @@ namespace WpfChatClient.Classes
 
         private async Task<TextRange> GetMessageText()
         {
-            await Task.Yield();
+            //await Task.Yield();
             return new TextRange(_messageRichTextBox.Document.ContentStart, _messageRichTextBox.Document.ContentEnd);
         }
 
 
         private async void _messageRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            await Task.Yield();
+            //await Task.Yield();
 
             try
             {
@@ -79,13 +79,13 @@ namespace WpfChatClient.Classes
 
         private async void _chatScrollViewer_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            await Task.Yield();
+            //await Task.Yield();
             _clientNowScrolling = true;
         }
 
         private async void _chatScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            await Task.Yield();
+            //await Task.Yield();
 
             try
             {
@@ -103,7 +103,7 @@ namespace WpfChatClient.Classes
 
         private async Task DockBottomScroll()
         {
-            await Task.Yield();
+            //await Task.Yield();
 
             try
             {
@@ -121,7 +121,7 @@ namespace WpfChatClient.Classes
 
         public async void PushMessage(string userName, FlowDocument doc)
         {
-            await Task.Yield();
+            //await Task.Yield();
 
             try
             {
@@ -141,7 +141,7 @@ namespace WpfChatClient.Classes
 
         public async void PushMessage(string userName, byte[] arr)
         {
-            await Task.Yield();
+            //await Task.Yield();
 
             try
             {
@@ -171,7 +171,7 @@ namespace WpfChatClient.Classes
 
         private async Task Work()
         {
-            await Task.Yield();
+            //await Task.Yield();
 
             try
             {
@@ -208,7 +208,7 @@ namespace WpfChatClient.Classes
 
         private async void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Yield();
+            //await Task.Yield();
             await Work();
         }
 

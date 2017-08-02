@@ -11,6 +11,16 @@ namespace WpfChatClient.Classes
 {
     public partial class FlowChatMessage
     {
+        private enum State
+        {
+            Collapsed,
+            Medified,
+            Expanded,
+            Undefined
+        }
+
+        private State _currentState = State.Undefined;
+
         private const double MediHeight = 200.0;
         private const int ToolTipImageWidth = 300;
         private const int ToolTipImageHeight = 100;
@@ -64,6 +74,7 @@ namespace WpfChatClient.Classes
                     _butCollapse.IsEnabled = false;
                     _butExpand.IsEnabled = true;
                     _butMedify.IsEnabled = true;
+                    _currentState = State.Collapsed;
                     _grid.Height = _info.Height + _buttons.Height;
                 }
                 catch (Exception ex)
@@ -79,6 +90,7 @@ namespace WpfChatClient.Classes
                     _butCollapse.IsEnabled = true;
                     _butExpand.IsEnabled = false;
                     _butMedify.IsEnabled = true;
+                    _currentState = State.Expanded;
                     _grid.Height = double.NaN;
                 }
                 catch (Exception ex)
@@ -94,6 +106,7 @@ namespace WpfChatClient.Classes
                     _butCollapse.IsEnabled = true;
                     _butExpand.IsEnabled = true;
                     _butMedify.IsEnabled = false;
+                    _currentState = State.Medified;
                     Visibility = Visibility.Hidden;
                     _grid.Height = double.NaN;
                     await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
@@ -124,6 +137,10 @@ namespace WpfChatClient.Classes
             {
                 try
                 {
+                    if (_currentState != State.Undefined)
+                        return;
+                    _currentState = State.Medified;
+
                     await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
                     _grid.Height = _grid.ActualHeight > MediHeight ? MediHeight : double.NaN;
 
