@@ -1,14 +1,21 @@
-﻿<Window x:Class="WpfChatClient.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfChatClient"
-        xmlns:classes1="clr-namespace:WpfChatClient.Classes"
-        mc:Ignorable="d"
-        Height="600" Width="800">
+﻿<Controls:MetroWindow
+    x:Class="WpfChatClient.MainWindow"
+    xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:WpfChatClient"
+    xmlns:classes1="clr-namespace:WpfChatClient.Classes"
+    mc:Ignorable="d"
+    Height="600"
+    Width="800">
     <Grid>
-        <classes1:TabChatControl
-            x:Name="Chat" />
+        <Border
+            BorderThickness="1"
+            BorderBrush="#CC119EDA">
+            <classes1:TabChatControl
+                x:Name="Chat" />
+        </Border>
     </Grid>
-</Window>
+</Controls:MetroWindow>

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ServiceModel;
 using System.Windows;
+using MahApps.Metro.Controls;
 using WpfChatClient.ChatServiceReference;
 using WpfChatClient.Interfaces;
 
 namespace WpfChatClient
 {
-    public partial class MainWindow
+    public partial class MainWindow : MetroWindow
     {
         private readonly IChat _chat;
 

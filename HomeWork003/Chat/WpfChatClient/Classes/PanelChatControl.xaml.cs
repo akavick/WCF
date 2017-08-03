@@ -37,6 +37,7 @@ namespace WpfChatClient.Classes
             _messageRichTextBox.PreviewKeyDown += _messageRichTextBox_PreviewKeyDown;
         }
 
+
         private TextRange GetMessageText()
         {
             return new TextRange(_messageRichTextBox.Document.ContentStart, _messageRichTextBox.Document.ContentEnd);
@@ -51,19 +52,19 @@ namespace WpfChatClient.Classes
                 switch (e.Key)
                 {
                     case Key.Escape:
-                    {
-                        _messageRichTextBox.Selection.Select(_messageRichTextBox.CaretPosition, _messageRichTextBox.CaretPosition);
-                        break;
-                    }
+                        {
+                            _messageRichTextBox.Selection.Select(_messageRichTextBox.CaretPosition, _messageRichTextBox.CaretPosition);
+                            break;
+                        }
                     case Key.Enter:
-                    {
-                        if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
-                            _messageRichTextBox.CaretPosition.InsertLineBreak();
-                        else
-                            Work();
-                        e.Handled = true;
-                        break;
-                    }
+                        {
+                            if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+                                _messageRichTextBox.CaretPosition.InsertLineBreak();
+                            else
+                                Work();
+                            e.Handled = true;
+                            break;
+                        }
                 }
             }
             catch (Exception ex)
@@ -174,23 +175,40 @@ namespace WpfChatClient.Classes
             {
                 try
                 {
-                    if (GetMessageText().IsEmpty)
+                    var messageText = GetMessageText();
+
+                    if (messageText.IsEmpty || string.IsNullOrWhiteSpace(messageText.Text))
                         return;
 
                     _sendMessageButton.IsEnabled = false;
 
-                    var flowDocument = _messageRichTextBox.Document;
-                    _messageRichTextBox.Document = new FlowDocument();
                     byte[] arr = null;
+                    //using (var stream = new MemoryStream())
+                    //{
+                    //    if (_messageRichTextBox.Document != null)
+                    //        XamlWriter.Save(_messageRichTextBox.Document, stream);
+                    //    arr = stream.ToArray();
+                    //}
 
-                    using (var stream = new MemoryStream())
+                    //var xaml = new Portable.Xaml.XamlXmlWriter();
+                    var str = XamlWriter.Save(_messageRichTextBox.Document);
+                    arr = Encoding.UTF8.GetBytes(str);
+
+                    //using (var stream = new MemoryStream())
+                    //{
+                    //    if (_messageRichTextBox.Document != null)
+                    //        Portable.Xaml.XamlServices.Save(stream, _messageRichTextBox.Document);
+                    //    arr = stream.ToArray();
+                    //}
+
+
+                    if (arr.Length > 100000000)
+                        MessageBox.Show("Сообщение имеет слишком большую длину");
+                    else
                     {
-                        if (flowDocument != null)
-                            XamlWriter.Save(flowDocument, stream);
-                        arr = stream.ToArray();
+                        _messageRichTextBox.Document = new FlowDocument();
+                        UserTryingToSendMessage?.Invoke(arr);
                     }
-
-                    UserTryingToSendMessage?.Invoke(arr);
                 }
                 catch (Exception ex)
                 {

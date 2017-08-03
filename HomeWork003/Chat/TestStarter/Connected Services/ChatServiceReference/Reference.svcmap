@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="264a77ad-4e3d-4a09-b7c0-6f1c7ce1fcdf" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="a26f693b-cdc9-4297-be0e-843084fff949" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,10 +22,10 @@
     <MetadataSource Address="net.tcp://localhost:8002/Chat/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="6d7db26a-4156-4efa-85a1-16816e3c0248" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="9c8af487-2fd9-4e11-a004-094cfae46bcc" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="c78ff054-b3f7-4479-9c25-f71014946e0d" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
-    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="c13471bf-c69e-44ed-acea-f5a9be5d91ee" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="d3b76746-6205-421a-a80d-6935c5a3771e" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="13d0352d-7653-4def-91d7-dd0d38bdeef8" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="c81b3cf4-5ff5-41a0-aa1e-c4feb742698f" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="8dc73483-9dc3-4036-bcdf-1572c184f7f5" SourceId="1" SourceUrl="net.tcp://localhost:8002/Chat/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -30,12 +30,14 @@
             <Setter
                 Property="Control.Margin"
                 Value="0" />
+            <Setter Property="Control.Background"
+                Value="#30119EDA"/>
         </Style>
     </Control.Resources>
 
     <Border
         BorderThickness="0,0,0,1"
-        BorderBrush="#FFE6E6E6"
+        BorderBrush="#30119EDA"
         Background="Transparent">
 
         <Grid
@@ -44,7 +46,7 @@
             Height="auto">
 
             <Grid
-                Background="Beige"
+                Background="#30119EDA"
                 x:Name="_info"
                 Height="15"
                 VerticalAlignment="Top">

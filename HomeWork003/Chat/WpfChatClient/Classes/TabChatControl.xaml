@@ -4,18 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:classes="clr-namespace:WpfChatClient.Classes"
-    mc:Ignorable="d" 
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <TabControl
+    <controls:MetroAnimatedTabControl
         x:Name="_talksTabControl"
         x:FieldModifier="private">
-        <TabItem
+        <controls:MetroTabItem
             x:Name="_mainChatTab"
             Header="MainChat">
             <classes:MainChatControl
                 x:Name="_fullChatControl"
                 x:FieldModifier="private" />
-        </TabItem>
-    </TabControl>
+        </controls:MetroTabItem>
+    </controls:MetroAnimatedTabControl>
 
 </UserControl>
