@@ -39,10 +39,11 @@
             BorderBrush="#30119EDA"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center"/>
+        <!--Content="{Binding ElementName=_clientsListBox, Path=Items.Count}"-->
         <Label
             x:Name="_clientsCountLabel"
             Foreground="#CC119EDA"
-            Content="0"
+            Content="1"
             Grid.Column="2"
             Height="40"
             FontSize="25"

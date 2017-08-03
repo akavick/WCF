@@ -9,8 +9,8 @@ namespace WpfChatClient.Classes
 {
     public partial class MainChatControl : IMainChatControl
     {
-        public ListBox ClientsListBox { get; }
-        public Label ClientsCountLabel { get; set; }
+        public ListBox ClientsListBox { get; } //todo: fixit
+        public Label ClientsCountLabel { get; set; } //todo: fixit
 
         public event Func<byte[], Task> UserTryingToSendMessage;
 

@@ -43,6 +43,37 @@ namespace WpfChatClient.Classes
 
 
 
+        private void CreateToolTip()
+        {
+            var renderTargetBitmap = new RenderTargetBitmap(ToolTipImageWidth, ToolTipImageHeight, Dpi, Dpi, PixelFormats.Default);
+            renderTargetBitmap.Render(_flowDocumentScrollViewer);
+            var pngImage = new PngBitmapEncoder();
+            pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+            var bitmapImage = new BitmapImage();
+            using (var stream = new MemoryStream())
+            {
+                pngImage.Save(stream);
+                renderTargetBitmap = null;
+                pngImage = null;
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.StreamSource = stream;
+                bitmapImage.EndInit();
+                bitmapImage.StreamSource = null;
+                bitmapImage.Freeze();
+            }
+
+            ToolTip = new Image
+            {
+                Source = bitmapImage,
+                Width = ToolTipImageWidth / 2.0,
+                Height = ToolTipImageHeight / 2.0
+            };
+            ToolTipService.SetInitialShowDelay(this, 200);
+        }
+
+
         private void Initialize(FlowDocument document, string name, DateTime time)
         {
             try
@@ -102,55 +133,34 @@ namespace WpfChatClient.Classes
 
                 Loaded += async (s, e) =>
                 {
-                    try
+                    if (_currentState != State.Undefined)
+                        return;
+                    _currentState = State.Medified;
+
+                    await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
+                    if (_grid.ActualHeight > MediHeight)
                     {
-                        if (_currentState != State.Undefined)
-                            return;
-                        _currentState = State.Medified;
-
-                        await _grid.Dispatcher.InvokeAsync(() => { }, DispatcherPriority.Render);
-                        if (_grid.ActualHeight > MediHeight)
-                        {
-                            _grid.Height = MediHeight;
-                            _isLongMessage = true;
-                        }
-                        else
-                        {
-                            _grid.Height = double.NaN;
-                            _butExpand.IsEnabled = false;
-                        }
-
-                        var renderTargetBitmap = new RenderTargetBitmap(ToolTipImageWidth, ToolTipImageHeight, Dpi, Dpi, PixelFormats.Default);
-                        renderTargetBitmap.Render(_flowDocumentScrollViewer);
-                        var pngImage = new PngBitmapEncoder();
-                        pngImage.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
-
-                        var bitmapImage = new BitmapImage();
-                        using (var stream = new MemoryStream())
-                        {
-                            pngImage.Save(stream);
-                            renderTargetBitmap = null;
-                            pngImage = null;
-                            bitmapImage.BeginInit();
-                            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmapImage.StreamSource = stream;
-                            bitmapImage.EndInit();
-                            bitmapImage.StreamSource = null;
-                            bitmapImage.Freeze();
-                        }
-
-                        ToolTip = new Image
-                        {
-                            Source = bitmapImage,
-                            Width = ToolTipImageWidth / 2.0,
-                            Height = ToolTipImageHeight / 2.0
-                        };
-                        ToolTipService.SetInitialShowDelay(this, 500);
+                        _grid.Height = MediHeight;
+                        _isLongMessage = true;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show(ex.ToString());
+                        _grid.Height = double.NaN;
+                        _butExpand.IsEnabled = false;
                     }
+
+                    ToolTip = new object();
+                };
+
+                ToolTipClosing += (s, e) =>
+                {
+                    ToolTip = null;
+                    ToolTip = new object();
+                };
+
+                ToolTipOpening += (s, e) =>
+                {
+                    CreateToolTip();
                 };
             }
             catch (Exception ex)

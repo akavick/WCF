@@ -52,19 +52,19 @@ namespace WpfChatClient.Classes
                 switch (e.Key)
                 {
                     case Key.Escape:
-                        {
-                            _messageRichTextBox.Selection.Select(_messageRichTextBox.CaretPosition, _messageRichTextBox.CaretPosition);
-                            break;
-                        }
+                    {
+                        _messageRichTextBox.Selection.Select(_messageRichTextBox.CaretPosition, _messageRichTextBox.CaretPosition);
+                        break;
+                    }
                     case Key.Enter:
-                        {
-                            if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
-                                _messageRichTextBox.CaretPosition.InsertLineBreak();
-                            else
-                                Work();
-                            e.Handled = true;
-                            break;
-                        }
+                    {
+                        if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+                            _messageRichTextBox.CaretPosition.InsertLineBreak();
+                        else
+                            Work();
+                        e.Handled = true;
+                        break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -169,56 +169,125 @@ namespace WpfChatClient.Classes
         }
 
 
-        private void Work()
+        //private void Work()
+        //{
+        //    Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (Action)(() =>
+        //    {
+        //        try
+        //        {
+        //            var messageText = GetMessageText();
+
+        //            if (messageText.IsEmpty || string.IsNullOrWhiteSpace(messageText.Text))
+        //                return;
+
+        //            _sendMessageButton.IsEnabled = false;
+
+        //            byte[] arr = null;
+        //            //using (var stream = new MemoryStream())
+        //            //{
+        //            //    if (_messageRichTextBox.Document != null)
+        //            //        XamlWriter.Save(_messageRichTextBox.Document, stream);
+        //            //    arr = stream.ToArray();
+        //            //}
+
+        //            //var xaml = new Portable.Xaml.XamlXmlWriter();
+
+        //            var str = XamlWriter.Save(_messageRichTextBox.Document);
+        //            arr = Encoding.UTF8.GetBytes(str);
+
+        //            //using (var stream = new MemoryStream())
+        //            //{
+        //            //    if (_messageRichTextBox.Document != null)
+        //            //        Portable.Xaml.XamlServices.Save(stream, _messageRichTextBox.Document);
+        //            //    arr = stream.ToArray();
+        //            //}
+
+
+        //            if (arr.Length > 100000000)
+        //                MessageBox.Show("Сообщение имеет слишком большую длину");
+        //            else
+        //            {
+        //                _messageRichTextBox.Document = new FlowDocument();
+        //                UserTryingToSendMessage?.Invoke(arr);
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show(ex.ToString());
+        //        }
+        //        finally
+        //        {
+        //            _sendMessageButton.IsEnabled = true;
+        //        }
+        //    }));
+        //}
+
+
+        private async void Work()
         {
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (Action)(() =>
+            try
             {
-                try
+                var messageText = GetMessageText();
+
+                if (messageText.IsEmpty || string.IsNullOrWhiteSpace(messageText.Text))
+                    return;
+
+                _sendMessageButton.IsEnabled = false;
+
+                await Task.Run(() =>
                 {
-                    var messageText = GetMessageText();
 
-                    if (messageText.IsEmpty || string.IsNullOrWhiteSpace(messageText.Text))
-                        return;
+                }).ContinueWith(t =>
+                {
 
-                    _sendMessageButton.IsEnabled = false;
+                }, TaskScheduler.FromCurrentSynchronizationContext());
 
-                    byte[] arr = null;
-                    //using (var stream = new MemoryStream())
-                    //{
-                    //    if (_messageRichTextBox.Document != null)
-                    //        XamlWriter.Save(_messageRichTextBox.Document, stream);
-                    //    arr = stream.ToArray();
-                    //}
 
-                    //var xaml = new Portable.Xaml.XamlXmlWriter();
-                    var str = XamlWriter.Save(_messageRichTextBox.Document);
+                byte[] arr = null;
+                //using (var stream = new MemoryStream())
+                //{
+                //    if (_messageRichTextBox.Document != null)
+                //        XamlWriter.Save(_messageRichTextBox.Document, stream);
+                //    arr = stream.ToArray();
+                //}
+
+                //var xaml = new Portable.Xaml.XamlXmlWriter();
+
+
+                await await Dispatcher.InvokeAsync(async () =>
+                {
+                    await Task.Yield();
+                    var doc = _messageRichTextBox.Document;
+                    _messageRichTextBox.Document = new FlowDocument();
+                    var str = XamlWriter.Save(doc);
                     arr = Encoding.UTF8.GetBytes(str);
-
-                    //using (var stream = new MemoryStream())
-                    //{
-                    //    if (_messageRichTextBox.Document != null)
-                    //        Portable.Xaml.XamlServices.Save(stream, _messageRichTextBox.Document);
-                    //    arr = stream.ToArray();
-                    //}
+                });
 
 
-                    if (arr.Length > 100000000)
-                        MessageBox.Show("Сообщение имеет слишком большую длину");
-                    else
-                    {
-                        _messageRichTextBox.Document = new FlowDocument();
-                        UserTryingToSendMessage?.Invoke(arr);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-                finally
-                {
-                    _sendMessageButton.IsEnabled = true;
-                }
-            }));
+
+                //using (var stream = new MemoryStream())
+                //{
+                //    if (_messageRichTextBox.Document != null)
+                //        Portable.Xaml.XamlServices.Save(stream, _messageRichTextBox.Document);
+                //    arr = stream.ToArray();
+                //}
+
+                //if (arr.Length > 100000000)
+                //    MessageBox.Show("Сообщение имеет слишком большую длину");
+                //else
+                //{
+                //    _messageRichTextBox.Document = new FlowDocument();
+                //    UserTryingToSendMessage?.Invoke(arr);
+                //}
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                _sendMessageButton.IsEnabled = true;
+            }
         }
 
 

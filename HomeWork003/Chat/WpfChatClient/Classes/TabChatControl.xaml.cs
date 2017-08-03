@@ -181,7 +181,7 @@ namespace WpfChatClient.Classes
                             if (element != UserName)
                                 MainChat.ClientsListBox.Items.Add(element);
                         }
-                        MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count;
+                        MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count + 1;
                     }
                 }
             }
@@ -205,7 +205,7 @@ namespace WpfChatClient.Classes
                         if (name != UserName)
                             MainChat.ClientsListBox.Items.Add(name);
                     }
-                    MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count;
+                    MainChat.ClientsCountLabel.Content = MainChat.ClientsListBox.Items.Count + 1;
                 }
             }
             catch (Exception e)
