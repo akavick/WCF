@@ -37,14 +37,14 @@ namespace TestStarter
             {
                 while (true)
                 {
-                    await Task.Delay(random.Next(50, 5001));
+                    await Task.Delay(random.Next(50, 51));
                     var client = clients[random.Next(clients.Count)];
-                    client.Server.SendToMainChat(client.Name, Encoding.UTF8.GetBytes("blah-blah"));
+                    client.Server.SendToMainChat(client.Name, Encoding.UTF8.GetBytes("blah-blah"/*new string('a', 10000)*/));
                 }
                 // ReSharper disable once FunctionNeverReturns
             });
 
-            Process.Start(@"..\..\..\WpfChatClient\bin\Debug\WpfChatClient.exe", "anyUser");
+            //Process.Start(@"..\..\..\WpfChatClient\bin\Debug\WpfChatClient.exe", "anyUser");
 
 
             Console.ReadKey(true);

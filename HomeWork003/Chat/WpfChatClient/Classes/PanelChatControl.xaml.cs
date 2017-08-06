@@ -14,63 +14,48 @@ namespace WpfChatClient.Classes
     public partial class PanelChatControl : IChatControl
     {
         private bool _clientNowScrolling;
-        private object _locker = new object();
-
+        private readonly object _locker = new object();
         public event Func<byte[], Task> UserTryingToSendMessage;
 
         public PanelChatControl()
         {
             InitializeComponent();
-            try
-            {
-                GetMessageText().Text = "";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+
             _sendMessageButton.Click += SendButton_Click;
             _chatScrollViewer.ScrollChanged += _chatScrollViewer_ScrollChanged;
             _chatScrollViewer.PreviewMouseWheel += _chatScrollViewer_PreviewMouseWheel;
             _chatScrollViewer.PreviewMouseDown += _chatScrollViewer_PreviewMouseDown;
             _chatScrollViewer.PreviewMouseUp += _chatScrollViewer_PreviewMouseUp;
-            _messageRichTextBox.PreviewKeyDown += _messageRichTextBox_PreviewKeyDown;
+            _textBox.PreviewKeyDown += _messageRichTextBox_PreviewKeyDown;
         }
-
-
-        private TextRange GetMessageText()
-        {
-            return new TextRange(_messageRichTextBox.Document.ContentStart, _messageRichTextBox.Document.ContentEnd);
-        }
-
 
         private void _messageRichTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
 
-            try
-            {
-                switch (e.Key)
-                {
-                    case Key.Escape:
-                    {
-                        _messageRichTextBox.Selection.Select(_messageRichTextBox.CaretPosition, _messageRichTextBox.CaretPosition);
-                        break;
-                    }
-                    case Key.Enter:
-                    {
-                        if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
-                            _messageRichTextBox.CaretPosition.InsertLineBreak();
-                        else
-                            Work();
-                        e.Handled = true;
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            //try
+            //{
+            //    switch (e.Key)
+            //    {
+            //        case Key.Escape:
+            //        {
+            //            _messageRichTextBox.Selection.Select(_messageRichTextBox.CaretPosition, _messageRichTextBox.CaretPosition);
+            //            break;
+            //        }
+            //        case Key.Enter:
+            //        {
+            //            if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+            //                _messageRichTextBox.CaretPosition.InsertLineBreak();
+            //            else
+            //                Work();
+            //            e.Handled = true;
+            //            break;
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.ToString());
+            //}
         }
 
         private void _chatScrollViewer_PreviewMouseUp(object sender, MouseButtonEventArgs e)
@@ -117,119 +102,58 @@ namespace WpfChatClient.Classes
         }
 
 
-        public void PushMessage(string userName, FlowDocument doc)
+        public void PushMessage(string userName, string message)
         {
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (Action)(() =>
+            try
             {
-                try
+                lock (_locker)
                 {
-                    var flowChatMessage = new FlowChatMessage(doc, userName, DateTime.Now);
+                    var flowChatMessage = new ChatMessage(message, userName, DateTime.Now);
                     DockPanel.SetDock(flowChatMessage, Dock.Top);
                     _chatDockPanel.Children.Add(flowChatMessage);
+                    if (_chatDockPanel.Children.Count > 500)
+                    {
+                        _chatDockPanel.Children.RemoveRange(0, 300);
+                        GC.Collect();
+                    }
+                }
 
-                    if (!_clientNowScrolling)
-                        _chatScrollViewer.ScrollToEnd();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-            }));
+                if (!_clientNowScrolling)
+                    _chatScrollViewer.ScrollToEnd();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
 
-        public void PushMessage(string userName, byte[] arr)
+        public async void PushMessage(string userName, byte[] arr)
         {
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (Action)(() =>
+            await await Dispatcher.InvokeAsync(async () =>
             {
+                await Task.Yield();
                 try
                 {
-                    FlowDocument document = null;
-                    try
-                    {
-                        using (var stream = new MemoryStream(arr))
-                            document = XamlReader.Load(stream) as FlowDocument;
-
-                        if (document != null)
-                            PushMessage(userName, document);
-                    }
-                    catch (XamlParseException)
-                    {
-                        document = new FlowDocument();
-                        var message = Encoding.UTF8.GetString(arr);
-                        var range = new TextRange(document.ContentStart, document.ContentEnd) { Text = message };
-                        PushMessage(userName, document);
-                    }
+                    var message = Encoding.UTF8.GetString(arr);
+                    PushMessage(userName, message);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
                 }
-            }));
+            });
         }
 
-
-        //private void Work()
-        //{
-        //    Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (Action)(() =>
-        //    {
-        //        try
-        //        {
-        //            var messageText = GetMessageText();
-
-        //            if (messageText.IsEmpty || string.IsNullOrWhiteSpace(messageText.Text))
-        //                return;
-
-        //            _sendMessageButton.IsEnabled = false;
-
-        //            byte[] arr = null;
-        //            //using (var stream = new MemoryStream())
-        //            //{
-        //            //    if (_messageRichTextBox.Document != null)
-        //            //        XamlWriter.Save(_messageRichTextBox.Document, stream);
-        //            //    arr = stream.ToArray();
-        //            //}
-
-        //            //var xaml = new Portable.Xaml.XamlXmlWriter();
-
-        //            var str = XamlWriter.Save(_messageRichTextBox.Document);
-        //            arr = Encoding.UTF8.GetBytes(str);
-
-        //            //using (var stream = new MemoryStream())
-        //            //{
-        //            //    if (_messageRichTextBox.Document != null)
-        //            //        Portable.Xaml.XamlServices.Save(stream, _messageRichTextBox.Document);
-        //            //    arr = stream.ToArray();
-        //            //}
-
-
-        //            if (arr.Length > 100000000)
-        //                MessageBox.Show("Сообщение имеет слишком большую длину");
-        //            else
-        //            {
-        //                _messageRichTextBox.Document = new FlowDocument();
-        //                UserTryingToSendMessage?.Invoke(arr);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show(ex.ToString());
-        //        }
-        //        finally
-        //        {
-        //            _sendMessageButton.IsEnabled = true;
-        //        }
-        //    }));
-        //}
 
 
         private async void Work()
         {
             try
             {
-                var messageText = GetMessageText();
+                var messageText = _textBox.Text;
 
-                if (messageText.IsEmpty || string.IsNullOrWhiteSpace(messageText.Text))
+                if (string.IsNullOrWhiteSpace(messageText))
                     return;
 
                 _sendMessageButton.IsEnabled = false;
@@ -244,41 +168,20 @@ namespace WpfChatClient.Classes
 
 
                 byte[] arr = null;
-                //using (var stream = new MemoryStream())
-                //{
-                //    if (_messageRichTextBox.Document != null)
-                //        XamlWriter.Save(_messageRichTextBox.Document, stream);
-                //    arr = stream.ToArray();
-                //}
-
-                //var xaml = new Portable.Xaml.XamlXmlWriter();
-
 
                 await await Dispatcher.InvokeAsync(async () =>
                 {
                     await Task.Yield();
-                    var doc = _messageRichTextBox.Document;
-                    _messageRichTextBox.Document = new FlowDocument();
-                    var str = XamlWriter.Save(doc);
-                    arr = Encoding.UTF8.GetBytes(str);
+                    arr = Encoding.UTF8.GetBytes(_textBox.Text);
                 });
 
-
-
-                //using (var stream = new MemoryStream())
-                //{
-                //    if (_messageRichTextBox.Document != null)
-                //        Portable.Xaml.XamlServices.Save(stream, _messageRichTextBox.Document);
-                //    arr = stream.ToArray();
-                //}
-
-                //if (arr.Length > 100000000)
-                //    MessageBox.Show("Сообщение имеет слишком большую длину");
-                //else
-                //{
-                //    _messageRichTextBox.Document = new FlowDocument();
-                //    UserTryingToSendMessage?.Invoke(arr);
-                //}
+                if (arr.Length > 100000000)
+                    MessageBox.Show("Сообщение имеет слишком большую длину");
+                else
+                {
+                    _textBox.Text = "";
+                    UserTryingToSendMessage?.Invoke(arr);
+                }
             }
             catch (Exception ex)
             {

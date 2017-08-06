@@ -40,17 +40,6 @@ namespace WpfChatClient.Classes
             }
         }
 
-        public void PushMessage(string userName, FlowDocument doc)
-        {
-            try
-            {
-                _chat.PushMessage(userName, doc);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-        }
 
         public void PushMessage(string userName, byte[] arr)
         {

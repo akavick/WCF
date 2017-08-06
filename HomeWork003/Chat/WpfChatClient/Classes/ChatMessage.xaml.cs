@@ -8,7 +8,7 @@ using System.Windows.Threading;
 
 namespace WpfChatClient.Classes
 {
-    public partial class FlowChatMessage
+    public partial class ChatMessage
     {
         private enum State
         {
@@ -24,7 +24,7 @@ namespace WpfChatClient.Classes
         private const int ToolTipLength = 1024;
         private const int ToolTipTime = 200;
 
-        public FlowChatMessage(FlowDocument document, string name, DateTime time)
+        public ChatMessage(string document, string name, DateTime time)
         {
             try
             {
@@ -37,17 +37,20 @@ namespace WpfChatClient.Classes
             }
         }
 
-
-
-        private void Initialize(FlowDocument document, string name, DateTime time)
+        private void Initialize(string message, string name, DateTime time)
         {
             try
             {
-                document.PagePadding = new Thickness(0.0);
-                document.FontFamily = new FontFamily("Segoe Ui");
-                document.FontSize = 15.0;
                 _butMedify.IsEnabled = false;
-                _flowDocumentScrollViewer.Document = document;
+                var doc = new FlowDocument
+                {
+                    PagePadding = new Thickness(0.0),
+                    FontFamily = new FontFamily("Segoe Ui"),
+                    FontSize = 15.0
+                };
+                var range = new TextRange(doc.ContentStart, doc.ContentEnd) {Text = message};
+                _scrollViewer.Document = doc;
+
                 _dateTime.Content = $"{time.ToLongDateString()} {time.ToLongTimeString()}";
                 _who.Content = name;
 
@@ -114,9 +117,8 @@ namespace WpfChatClient.Classes
                         _butExpand.IsEnabled = false;
                     }
 
-                    var text = new TextRange(document.ContentStart, document.ContentEnd).Text;
-                    text = text.Substring(0, text.Length > ToolTipLength ? ToolTipLength : text.Length);
-                    ToolTip = text;
+                    var toolTipText = message.Substring(0, message.Length > ToolTipLength ? ToolTipLength : message.Length);
+                    ToolTip = toolTipText;
                     ToolTipService.SetInitialShowDelay(this, ToolTipTime);
                 };
             }

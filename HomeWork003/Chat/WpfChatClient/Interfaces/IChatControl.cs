@@ -8,7 +8,6 @@ namespace WpfChatClient.Interfaces
     public interface IChatControl
     {
         event Func<byte[], Task> UserTryingToSendMessage;
-        void PushMessage(string userName, FlowDocument doc);
         void PushMessage(string userName, byte[] arr);
         object Tag { get; set; }
     }
